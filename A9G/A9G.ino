@@ -2,9 +2,6 @@
 
 HardwareSerial SerialPort(2);  // use UART2
 
-char number = ' ';
-int LED = 2;
-
 struct GpsData {
   String time;
   String latitude;
