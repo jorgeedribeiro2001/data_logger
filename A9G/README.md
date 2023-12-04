@@ -23,7 +23,7 @@ The processed data is then displayed in a user-friendly manner on the Arduino Se
 
 1. Connect the A9G module to the Arduino board.
 2. Open the Arduino IDE.
-3. Upload the provided code (`A9G_Project.ino`) to your Arduino board.
+3. Upload the provided code (`A9G.ino`) to your Arduino board.
 4. Open the Serial Monitor to view the processed GPS data.
 
 ## Usage
