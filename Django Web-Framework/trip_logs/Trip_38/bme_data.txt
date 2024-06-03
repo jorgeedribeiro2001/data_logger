@@ -1,0 +1,92 @@
+[
+    {
+        "timestamp": 1715106125,
+        "temperature": 25.79,
+        "humidity": 48.97,
+        "pressure": 101947.0
+    },
+    {
+        "timestamp": 1715107335,
+        "temperature": 25.66,
+        "humidity": 50.83,
+        "pressure": 101954.0
+    },
+    {
+        "timestamp": 142,
+        "temperature": 23.0,
+        "humidity": 69.93,
+        "pressure": 101727.0
+    },
+    {
+        "timestamp": 1715204468,
+        "temperature": 23.42,
+        "humidity": 61.72,
+        "pressure": 101729.0
+    },
+    {
+        "timestamp": 1715204955,
+        "temperature": 26.08,
+        "humidity": 61.01,
+        "pressure": 101727.0
+    },
+    {
+        "timestamp": 1715205227,
+        "temperature": 26.09,
+        "humidity": 57.65,
+        "pressure": 101728.0
+    },
+    {
+        "timestamp": 1715205576,
+        "temperature": 25.98,
+        "humidity": 59.19,
+        "pressure": 101733.0
+    },
+    {
+        "timestamp": 1715205625,
+        "temperature": 25.73,
+        "humidity": 60.38,
+        "pressure": 101734.0
+    },
+    {
+        "timestamp": 1715205700,
+        "temperature": 25.59,
+        "humidity": 61.65,
+        "pressure": 101734.0
+    },
+    {
+        "timestamp": 1715205825,
+        "temperature": 25.47,
+        "humidity": 60.62,
+        "pressure": 101734.0
+    },
+    {
+        "timestamp": 1715205949,
+        "temperature": 25.32,
+        "humidity": 60.75,
+        "pressure": 101734.0
+    },
+    {
+        "timestamp": 1715240277,
+        "temperature": 23.84,
+        "humidity": 50.41,
+        "pressure": 101309.0
+    },
+    {
+        "timestamp": 1715240452,
+        "temperature": 23.63,
+        "humidity": 49.85,
+        "pressure": 101311.0
+    },
+    {
+        "timestamp": 1715240527,
+        "temperature": 23.53,
+        "humidity": 49.8,
+        "pressure": 101313.0
+    },
+    {
+        "timestamp": 1715240651,
+        "temperature": 23.53,
+        "humidity": 49.22,
+        "pressure": 101314.0
+    }
+]

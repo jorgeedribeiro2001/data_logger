@@ -1,0 +1,38 @@
+[
+    {
+        "timestamp": 1715263159,
+        "temperature": 24.23,
+        "humidity": 52.52,
+        "pressure": 101248.0
+    },
+    {
+        "timestamp": 1715264209,
+        "temperature": 24.27,
+        "humidity": 54.15,
+        "pressure": 101235.0
+    },
+    {
+        "timestamp": 1715264513,
+        "temperature": 24.07,
+        "humidity": 55.11,
+        "pressure": 101241.0
+    },
+    {
+        "timestamp": 1715264817,
+        "temperature": 23.91,
+        "humidity": 55.81,
+        "pressure": 101237.0
+    },
+    {
+        "timestamp": 1715265122,
+        "temperature": 23.8,
+        "humidity": 55.73,
+        "pressure": 101237.0
+    },
+    {
+        "timestamp": 1715265428,
+        "temperature": 23.73,
+        "humidity": 55.57,
+        "pressure": 101234.0
+    }
+]

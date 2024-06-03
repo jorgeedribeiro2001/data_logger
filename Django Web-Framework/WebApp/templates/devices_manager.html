@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Devices Manager
+{% endblock %}
+
+{% block content %}
+{% for logger in loggers %}
+    <div style="border: 2px solid #ffffff; border-radius: 2px; padding: 20px; color: #ffffff; margin: 10px; background-color: #444;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="color: #ffffff;">Data logger Name:
+                <span style="color: #ffffff;">{{ logger.name }}</span>
+            </h4>
+    <div style="text-align: right;">
+        <button onclick="openLog('{% url 'log_file' logger.id %}')" style="padding: 10px; background-color: #FFFFFF; color: black; border: none; cursor: pointer; border-radius: 4px; margin-left: 10px;">View Log</button>
+
+        <button onclick="sendRequest('/send_config_file/', {{ logger.id }})" style="padding: 10px; background-color: #FFFFFF; color: black; border: none; cursor: pointer; border-radius: 4px; margin-left: 10px;">Send Configuration</button>
+    
+        <button onclick="sendRequest_end('{% url 'end-trip-request' logger.id %}')" style="padding: 10px; background-color: #FFFFFF; color: black; border: none; cursor: pointer; border-radius: 4px; margin-left: 10px;">End Current Trip</button>
+    </div>   
+    <script>
+    function sendRequest_end(url) {
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert(JSON.stringify(data, null, 2));
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+    </script>
+
+<script>
+function sendRequest(url, logger_id) {
+    fetch(url + logger_id + "/", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert(JSON.stringify(data, null, 2));
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+</script>
+
+
+
+
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; color: #ffffff;">
+            
+            <tr style="border-bottom: 1px solid #ffffff;">
+                <td style="padding: 10px;">Logger ID:</td>
+                <td style="padding: 10px;" id="logger-id">{{ logger.id }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ffffff;">
+                <td style="padding: 10px;">Battery Level:</td>
+                <td style="padding: 10px;" id="battery-level">{{ logger.battery_level }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ffffff;">
+                <td style="padding: 10px;">Current Trip:</td>
+                <td style="padding: 10px;" id="current-trip">{{ logger.current_trip.name }}</td>
+            </tr> 
+            <tr style="border-bottom: 1px solid #ffffff;">
+                <td style="padding: 10px;">Last Communication Timestamp:</td>
+                <td style="padding: 10px;" id="last-communication-timestamp">{{ logger.last_communication_timestamp}}</td>
+            </tr>
+            <td style="padding: 10px;">Last GPS Location:</td>
+            <td style="padding: 10px;" id="last-gps-timestamp">
+                {% if logger.last_gps_timestamp == "0" or logger.last_gps_timestamp == "Jan. 1, 1970, midnight" %}
+                    No location has yet been obtained.
+                {% else %}
+                    {{ logger.last_gps_timestamp }}
+                {% endif %}
+            </td>
+        </table>
+
+        {% if logger.last_gps_location_latitude != 0 and logger.last_gps_location_longitude != 0 %}
+            <div id="map-{{ logger.id }}" style="width: 100%; height: 200px;"></div>
+        
+            <script>
+                var map = L.map('map-{{ logger.id }}').setView([{{ logger.last_gps_location_latitude }}, {{ logger.last_gps_location_longitude }}], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+                L.marker([{{ logger.last_gps_location_latitude }}, {{ logger.last_gps_location_longitude }}]).addTo(map);
+            </script>
+        {% endif %}
+        
+    </div>
+{% empty %}
+    <p>No loggers found.</p>
+{% endfor %}
+
+<div id="logPopup" style="display: none; position: fixed; width: 80%; height: 80%; top: 10%; left: 10%; background: white; padding: 20px; overflow: auto; z-index: 9999;">
+    <div style="position: fixed; right: 12%; top: 12%;">
+        <button onclick="document.getElementById('logPopup').style.display = 'none'">Close</button>
+    </div>
+    <table id="logTable" style="border-collapse: separate; border-spacing: 20px;">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Timestamp</th>
+                <th onclick="sortTable(1)">Type of error</th>
+                <th onclick="sortTable(2)">Message</th>
+            </tr>
+        </thead>
+        <tbody id="logContent"></tbody>
+    </table>
+</div>
+
+<script>
+function openLog(url) {
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            const logContent = document.getElementById('logContent');
+            logContent.innerHTML = '';
+            const lines = data.split('\n');
+            for (let line of lines) {
+                const [timestamp, type, task, ...message] = line.split(',');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(parseInt(timestamp) * 1000).toLocaleString()}</td>
+                    <td>${type}</td>
+                    <td>${message.join(',')}</td>
+                `;
+                logContent.appendChild(row);
+            }
+            document.getElementById('logPopup').style.display = 'block';
+        });
+}
+
+function sortTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("logTable");
+    switching = true;
+    dir = "asc";
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount ++;      
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+</script>
+
+
+{% endblock %}

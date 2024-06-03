@@ -1,0 +1,60 @@
+DHl, rastreablilidade, transportadoras teses relacionadas 
+
+dano no produto 
+
+Henrique apresentação efacec 18 segunda 16h15
+
+Transformada de Forier
+
+rever 10 a 20 artigos e fazer uma pagina de resumo (analise do problema, soluçao proposta, metodo de analise de resultados, conclusoes) tiirar partes fundamentais para o projeto (sumo)
+
+algoritmo de processamento de dados para vibrações (procurar artigos cientificos)
+
+jason 
+
+
+17:10 06/12/2023
+artigos para verificar a antena de gps e erro de posição
+dois cores processadores 
+spyes dual cores, core posso ter varios processos
+guardar na ram array[0] a [10] tem x valores de gps outros tem outra cena
+processos independentes  
+de ram
+
+
+array[] com os parametros 
+fluxograma de comandos AT
+
+
+
+relação entre tempo e frequencia de vibração
+um mes de performance em quanto nos testes
+histograma de frequencia
+retirar frequencia amostragem durante x tempo
+
+
+
+
+francisco
+teste de queue
+
+try catch for log
+
+
+te connectivity
+174417-4 2.5mm
+
+meter modulo de cartao sd
+substituir por conector o mesmo com 6 pinos
+tdl100 e 140 fazer comparação
+ 
+
+SAVER 3X90
+
+
+Apos acordar tem de registar algum valor a dozer que sofreu impacto ou que
+
+
+
+
+

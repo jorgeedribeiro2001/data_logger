@@ -1,0 +1,30 @@
+cd C:\Program Files\mosquitto
+
+mosquitto_pub -h broker.hivemq.com -p 1883 -t "bme" -m "BME:1702545929_23.25_65.03_101566.34,"
+
+mosquitto_sub -h broker.hivemq.com -p 1883 -t "bme"
+mosquitto_sub -h broker.emqx.io -p 1883 -t "bme"
+
+mosquitto_sub -h 172.187.90.157 -p 1883 -t "bme"
+mosquitto_pub -h 172.187.90.157 -p 1883 -t "bme" -m "%data_logger1%bme,1702545929_23.25_65.03_101566.34,"
+
+
+mosquitto_pub -h broker.hivemq.com -p 1883 -t "imu" -m "%data_logger1%imu,1702731008.00_0.00_0.00_0.00_,0.00_0.02_0.07_0.81_,6.00_0.16_-0.26_2.00_,12.00_0.36_0.03_0.75_,18.00_0.01_0.05_1.14_,24.00_0.17_0.08_1.08_,30.00_0.08_-0.02_1.37_,36.00_0.15_0.04_1.19_,42.00_0.12_0.03_1.28_,48.00_0.02_-0.01_1.36_,54.00_-0.11_-0.03_1.61_,60.00_-0.15_0.00_1.38_,66.00_-0.21_0.00_1.34_,72.00_-0.08_-0.06_1.38_,78.00_0.02_-0.13_1.44_,"
+
+mosquitto_pub -h broker.hivemq.com -p 1883 -t "bme" -m "%data_logger1%bme,1702545929_23.25_65.03_101566.34,"
+
+mosquitto_pub -h broker.emqx.io -p 1883 -t "bme" -m "%data_logger1%bme,1702545929_23.25_65.03_101566.34,"
+
+%data_logger1%bme,1704900478.00_19.98_79.06_100459.00_,
+
+mosquitto_pub -h broker.hivemq.com -p 1883 -t "gps" -m "%data_logger1%gps,1703080798_4036.6082_N_00844.9779_W_,"
+
+
+
+
+docker run --network=mynetwork -d script_python_5
+
+
+
+AT+MQTTCONN="broker.hivemq.com",1883,"12345",120,0
+AT+MQTTPUB="bme","124563",0,0,0

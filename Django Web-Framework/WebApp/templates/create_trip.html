@@ -1,0 +1,492 @@
+{% extends 'base.html' %}
+{% block title %}
+Data Logger Dashboard
+{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Trip</title>
+</head>
+<body>
+
+    <div style="background-color: #222222; color: #ffffff; padding: 20px; ">
+        <h2 style="text-align: center;">Create Trip</h2>
+        <label for="trip-select" style="display: block; margin-bottom: 10px;">Trip Name:</label>
+        <input type="text" id="trip_name" name="trip_name" style="width: 100%; padding: 6px; margin-bottom: 10px;">
+        <label for="device-select" style="display: block; margin-bottom: 10px;">Choose a data logger for this trip:</label>
+        <select id="device-select" name="device-select" style="width: 100%; padding: 6px;margin-bottom: 10px;">
+            {% for logger in loggers_available %}
+                <option value="{{ logger.name }}">{{ logger.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="trip-select" style="display: block; margin-bottom: 10px;">Starting Date and Time:</label>
+        <input type="datetime-local" id="start_date" name="start_date" style="width: 100%; padding: 6px; margin-bottom: 10px;">
+        
+        <script>
+        window.onload = function() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = (now.getMonth() + 1).toString().padStart(2, '0');
+            var day = now.getDate().toString().padStart(2, '0');
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            var datetime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+            document.getElementById('start_date').value = datetime;
+        };
+        </script>
+
+        <h3 style="text-align: left;margin-top: 20px;margin-bottom: 10px;">Variables Configurarion</h3>
+        
+        <h5 style="text-align: left;margin-top: 20px;margin-bottom: 20px;">Communication</h5>
+
+        <label for="trip-select" style="display: inline-block; margin-bottom: 10px;">MQTT address:</label>
+        <input type="text" id="mqtt_address" name="mqtt_address" value="172.187.90.157" style="width: 20%; padding: 6px; margin-bottom: 10px;">
+        
+        <label for="trip-select" style="display:inline-block; margin-bottom: 10px;">MQTT port:</label>
+        <input type="number" id="mqtt_port" name="mqtt_port" value="1883" style="width: 8%; padding: 6px; margin-bottom: 10px;">
+
+        <h3 style="text-align: left;margin-top: 20px;margin-bottom: 20px;">Working Parameters</h3>
+
+
+
+        <div style="display: flex;">
+            <div style="flex: 1; padding: 10px;">
+                <!-- Content for the first column goes here -->
+
+        <h4 style="text-align: left;margin-top: 10px;margin-bottom: 20px;">Sleep Mode</h4>
+            
+        <label for="activate" style="display: inline-block; margin-left: 0px;">Activate
+            <input type="radio" id="activate" name="sleep_mode" value="activate" checked>
+        </label>
+        <label for="deactivate" style="display: inline-block; margin-left: 10px;">Deactivate
+            <input type="radio" id="deactivate" name="sleep_mode" value="deactivate">
+        </label>
+
+        <div style="height: 5px; display: block"></div>
+
+        <label for="sleep_interval" id="sleep_interval_label" style="display: block; ">Sleep Interval (minutes):</label>
+        <input type="number" id="sleep_interval" name="sleep_interval" value="10" style="display: inline-block; padding: 6px; width: 90%; margin-top: 10px; margin-bottom: 10px; ">
+
+        <label for="movement_detection_threshold" id="movement_detection_threshold_label" style="display: block;">Movement Detection Magnitude Threshold (g):</label>
+        <input type="number" id="movement_detection_threshold" name="movement_detection_threshold" value="0.3" style="display: inline-block; padding: 6px; width: 90%; margin-top: 10px; margin-bottom: 10px;">
+
+        <p style="color: gray; margin-bottom: 10px; width: 90%;">This mode determines whether the device enters a sleep mode if there is no movement above a certain threshold defined in an interval. This improves battery efficiency, although in some cases, it may not detect an impact on the wake-up.</p>
+        
+        <script>
+        document.querySelectorAll('input[name="sleep_mode"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var sleepMode = this.value;
+                var sleepIntervalInput = document.getElementById('sleep_interval');
+                var movementDetectionThresholdInput = document.getElementById('movement_detection_threshold');
+                if (sleepMode === 'activate') {
+                    sleepIntervalInput.disabled = false;
+                    movementDetectionThresholdInput.disabled = false;
+                } else {
+                    sleepIntervalInput.disabled = true;
+                    movementDetectionThresholdInput.disabled = true;
+                }
+            });
+        });
+        </script>
+
+        <!-- BME Sensor Mode -->
+
+        <div style="height: 50px; display: block"></div>
+
+        <h4 style="text-align: left;margin-top: 10px;margin-bottom: 20px;">Temperature, Humidity and Pressure Sensor</h4>
+        
+        <label for="bme_activate" style="display: inline-block; margin-left: 0px;">Activate
+            <input type="radio" id="bme_activate" name="bme_mode" value="activate" checked>
+        </label>
+        <label for="bme_deactivate" style="display: inline-block; margin-left: 10px;">Deactivate
+            <input type="radio" id="bme_deactivate" name="bme_mode" value="deactivate" >
+        </label>
+
+        <div style="height: 5px; display: block"></div>
+        
+        <label for="bme_sampling_interval" id="bme_sampling_interval_label" style="margin-bottom: 10px; display: block;">BME Sampling Interval (minutes):</label>
+        <input type="number" id="bme_sampling_interval" name="bme_sampling_interval" value="30" style="width: 90%; padding: 6px; margin-bottom: 10px;">
+        
+        <label for="bme_sampling_duration" id="bme_read_values_interval_label" style="margin-bottom: 10px; display: block;">BME Sampling Duration (seconds):</label>
+        <input type="number" id="bme_sampling_duration" name="bme_sampling_duration" value="10" style="width: 90%; padding: 6px; margin-bottom: 10px;">
+        
+        <script>
+        document.querySelectorAll('input[name="bme_mode"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var bmeMode = this.value;
+                var bmeSamplingIntervalInput = document.getElementById('bme_sampling_interval');
+                var bmeReadValuesIntervalInput = document.getElementById('bme_sampling_duration');
+                if (bmeMode === 'activate') {
+                    bmeSamplingIntervalInput.disabled = false;
+                    bmeReadValuesIntervalInput.disabled = false;
+                } else {
+                    bmeSamplingIntervalInput.disabled = true;
+                    bmeReadValuesIntervalInput.disabled = true;
+                }
+            });
+        });
+        </script>
+        </script>
+
+        <div style="height: 50px; display: block"></div>
+
+        <h4 style="text-align: left;margin-top: 10px;margin-bottom: 20px;">GPS Sensor</h4>
+
+        <label for="gps_activate" style="display: inline-block; margin-left: 0px;">Activate
+            <input type="radio" id="gps_activate" name="gps_mode" value="activate"checked>
+        </label>
+        <label for="gps_deactivate" style="display: inline-block; margin-left: 10px;">Deactivate
+            <input type="radio" id="gps_deactivate" name="gps_mode" value="deactivate">
+        </label>
+
+        <div id="gps_config" style="display: block;">
+            <label for="gps_sampling_interval" style="display: block; margin-bottom: 10px;">GPS Sampling Interval (minutes):</label>
+            <input type="number" id="gps_sampling_interval" name="gps_sampling_interval" value="60" style="width: 90%; padding: 6px; margin-bottom: 10px;">
+
+            <label for="gps_max_time" style="display: block; margin-bottom: 10px;">Maximum Time To Obtain Location (seconds):</label>
+            <input type="number" id="gps_max_time" name="gps_max_time" value="120" style="width: 90%; padding: 6px; margin-bottom: 10px;">
+        </div>
+
+        <script>
+        document.querySelectorAll('input[name="gps_mode"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var gpsMode = this.value;
+                var gpsConfigInputs = document.querySelectorAll('#gps_config input');
+                gpsConfigInputs.forEach(function(input) {
+                    input.disabled = gpsMode !== 'activate';
+                });
+            });
+        });
+        </script>
+        
+
+
+
+
+    </div>
+    <div style="flex: 1; padding: 10px;">
+        <!-- Content for the second column goes here -->
+
+        <h4 style="text-align: left;margin-top: 10px;margin-bottom: 20px;">Impact and Vibration Sensor</h4>
+
+        <div id="accelerometer_config">
+            <label for="accelerometer_scale" style="display: block-inline; margin-bottom: 10px;">Accelerometer Scale (g):</label>
+            <label for="accelerometer_scale_2g" style="margin-right: 10px;margin-left: 10px;"><input type="radio" id="accelerometer_scale_2g" name="accelerometer_scale" value="2"> 2</label>
+            <label for="accelerometer_scale_4g" style="margin-right: 10px;"><input type="radio" id="accelerometer_scale_4g" name="accelerometer_scale" value="4"> 4</label>
+            <label for="accelerometer_scale_8g" style="margin-right: 10px;"><input type="radio" id="accelerometer_scale_8g" name="accelerometer_scale" value="8" checked> 8</label>
+            <label for="accelerometer_scale_16g" style="margin-right: 10px;"><input type="radio" id="accelerometer_scale_16g" name="accelerometer_scale" value="16"> 16</label>
+
+            <div style="height: 0px; display: block"></div>
+
+            <label for="data_rate" style="display: block-inline; margin-top: 10px;">Sampling Data Rate (Hz):</label>
+            <label for="data_rate_25" style="display: block-inline; margin-right: 10px;margin-left: 10px;"><input type="radio" id="data_rate_25" name="data_rate" value="25"> 25</label>
+            <label for="data_rate_50" style="margin-right: 10px;"><input type="radio" id="data_rate_50" name="data_rate" value="50"> 50</label>
+            <label for="data_rate_100" style="margin-right: 10px;"><input type="radio" id="data_rate_100" name="data_rate" value="100"> 100</label>
+            <label for="data_rate_200" style="margin-right: 10px;"><input type="radio" id="data_rate_200" name="data_rate" value="200" checked> 200</label>
+            <label for="data_rate_250" style="margin-right: 10px;"><input type="radio" id="data_rate_250" name="data_rate" value="250"> 250</label>
+            <label for="data_rate_400" style="margin-right: 10px;"><input type="radio" id="data_rate_400" name="data_rate" value="400"> 400</label>
+        </div>
+
+        <div style="height: 30px; display: block"></div>
+
+
+
+        <label for="impact_mode" style="display: block; margin-bottom: 10px;">Impact Mode:</label>
+        <label for="impact_activate" style="display: inline-block;">Activate
+            <input type="radio" id="impact_activate" name="impact_mode" value="activate" checked>
+        </label>
+        <label for="impact_deactivate" style="display: inline-block; margin-left: 10px;">Deactivate
+            <input type="radio" id="impact_deactivate" name="impact_mode" value="deactivate">
+        </label>
+
+        <div id="impact_config">
+            <label for="impact_threshold" style="display: block; margin-bottom: 10px;margin-top: 10px;">Impact Magnitude Threshold (G):</label>
+            <input type="range" id="impact_threshold" name="impact_threshold" min="2.0" max="12.0" step="0.1" value="5.0" style="width: 90%; padding: 10px; margin-bottom: 10px; height: 25px;">
+            <span id="impact_threshold_value">5.0</span>g
+        </div>
+        
+        <script>
+        document.getElementById('impact_threshold').addEventListener('input', function() {
+            document.getElementById('impact_threshold_value').textContent = this.value;
+        });
+        </script>
+
+        <script>
+        document.querySelectorAll('input[name="impact_mode"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var impactMode = this.value;
+                var impactConfigInputs = document.querySelectorAll('#impact_config input');
+                impactConfigInputs.forEach(function(input) {
+                    input.disabled = impactMode !== 'activate';
+                });
+            });
+        });
+        </script>
+
+        <div style="height: 10px; display: block"></div>
+
+        <label for="vibration_mode" style="display: block; margin-bottom: 10px;">Vibration Mode:</label>
+        <label for="vibration_activate" style="display: inline-block;">Activate
+            <input type="radio" id="vibration_activate" name="vibration_mode" value="activate" checked>
+        </label>
+        <label for="vibration_deactivate" style="display: inline-block; margin-left: 10px;">Deactivate
+            <input type="radio" id="vibration_deactivate" name="vibration_mode" value="deactivate">
+        </label>
+
+
+        <div id="vibration_config">
+
+            <label for="vibration_sampling_interval" style="display: block; margin-bottom: 10px;">Vibration Sampling Interval (seconds):</label>
+            <input type="number" id="vibration_sampling_interval" name="vibration_sampling_interval" value="30" style="width: 90%; padding: 6px; margin-bottom: 10px;">
+
+            <div style="height: 10px; display: block"></div>
+
+            <label for="n_vibration_per_sample" style="display: block-inline; margin-top: 0px; margin-bottom:0px;">Number of Vibration Samples:</label>
+            <label for="n_vibration_per_sample_128" style="display: block-inline; margin-right: 10px;margin-left: 10px;"><input type="radio" id="n_vibration_per_sample_128" name="n_vibration_per_sample" value="128"> 128</label>
+            <label for="n_vibration_per_sample_256" style="margin-right: 10px;"><input type="radio" id="n_vibration_per_sample_256" name="n_vibration_per_sample" value="256"> 256</label>
+            <label for="n_vibration_per_sample_512" style="margin-right: 10px;"><input type="radio" id="n_vibration_per_sample_512" name="n_vibration_per_sample" value="512" checked> 512</label>
+            <label for="n_vibration_per_sample_1024" style="margin-right: 10px;"><input type="radio" id="n_vibration_per_sample_1024" name="n_vibration_per_sample" value="1024"> 1024</label>
+            <label for="n_vibration_per_sample_2048" style="margin-right: 10px;"><input type="radio" id="n_vibration_per_sample_2048" name="n_vibration_per_sample" value="2048"> 2048</label>
+
+            <label for="vibration_threshold" style="display: block; margin-bottom: 10px;margin-top: 10px;">Vibration Magnitude Threshold (G):</label>
+            <input type="range" id="vibration_threshold" name="vibration_threshold" min="0" max="0.1" step="0.001" value="0.01" style="width: 90%; padding: 10px; margin-bottom: 10px; height: 25px;">
+            <span id="vibration_threshold_value">0.01</span>g
+        </div>
+        
+        <script>
+        document.querySelectorAll('input[name="vibration_mode"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var vibrationMode = this.value;
+                var vibrationConfigInputs = document.querySelectorAll('#vibration_config input');
+                vibrationConfigInputs.forEach(function(input) {
+                    input.disabled = vibrationMode !== 'activate';
+                });
+            });
+        });
+        
+        document.getElementById('vibration_threshold').addEventListener('input', function() {
+            document.getElementById('vibration_threshold_value').textContent = this.value;
+        });
+        </script>
+
+
+
+
+        <div style="height: 50px; display: block"></div>
+
+        <h4 style="text-align: left;margin-top: 10px;margin-bottom: 20px;">Real Time Communication</h4>
+            
+        
+
+            <label for="mqtt_activate" style="display: inline-block; margin-left: 0px;">Activate
+                <input type="radio" id="mqtt_activate" name="mqtt_mode" value="activate" checked>
+            </label>
+            <label for="mqtt_deactivate" style="display: inline-block; margin-left: 10px;">Deactivate
+                <input type="radio" id="mqtt_deactivate" name="mqtt_mode" value="deactivate">
+            </label>
+        
+        <div id="mqtt_config">
+            
+            <label for="mqtt_interval" style="display: block; margin-bottom: 10px;">Communication Interval (minutes):</label>
+            <input type="number" id="mqtt_interval" name="mqtt_interval" value="30" style="width: 90%; padding: 6px; margin-bottom: 10px;">
+        </div>
+
+        <script>
+            document.querySelectorAll('input[name="mqtt_mode"]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    var mqttMode = this.value;
+                    var mqttConfigInputs = document.querySelectorAll('#mqtt_config input');
+                    mqttConfigInputs.forEach(function(input) {
+                        input.disabled = mqttMode !== 'activate';
+                    });
+                });
+            });
+        </script>
+
+
+
+
+
+
+
+
+
+        <div style="height: 50px; display: block"></div>
+
+        <h4 style="text-align: left;margin-top: 10px;margin-bottom: 20px;">Microcontroller Logs and Stats</h4>
+        
+        <label for="logs_mode" style="display: block; margin-bottom: 10px;">Logs:</label>
+
+        
+        <label for="logs_activate" style="display: inline-block; margin-left: 0px;">Activate
+            <input type="radio" id="logs_activate" name="logs_mode" value="activate" checked>
+        </label>
+        <label for="logs_deactivate" style="display: inline-block; margin-left: 10px;">Deactivate
+            <input type="radio" id="logs_deactivate" name="logs_mode" value="deactivate">
+        </label>
+
+        <p style="color: gray; margin-bottom: 10px;">This will affect mobile data and battery.</p>
+
+        <div style="height: 20px; display: block"></div>
+        
+        <label for="logs_mode" style="display: block; margin-bottom: 10px;">ESP Stats:</label>
+        <label for="esp_stats_activate" style="display: inline-block; margin-left: 0px;">Activate
+            <input type="radio" id="esp_stats_activate" name="esp_stats_mode" value="activate" checked>
+        </label>
+        <label for="esp_stats_deactivate" style="display: inline-block; margin-left: 10px;">Deactivate
+            <input type="radio" id="esp_stats_deactivate" name="esp_stats_mode" value="deactivate">
+        </label>
+        
+        <div id="esp_stats_config">
+            <label for="esp_stats_sampling_interval" style="display: block; margin-bottom: 10px;">ESP Stats Sampling Interval (minutes):</label>
+            <input type="number" id="esp_stats_sampling_interval" name="esp_stats_sampling_interval" value="10" style="width: 90%; padding: 6px; margin-bottom: 10px;">
+        </div>
+
+        <p style="color: gray; margin-bottom: 10px; width: 90%;">This task monitors and logs system statistics like RAM usage and battery voltage. It will affect battery and mobile data.</p>
+
+        
+        <script>
+        document.querySelectorAll('input[name="esp_stats_mode"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var espStatsMode = this.value;
+                var espStatsConfigInputs = document.querySelectorAll('#esp_stats_config input');
+                espStatsConfigInputs.forEach(function(input) {
+                    input.disabled = espStatsMode !== 'activate';
+                });
+            });
+        });
+        </script>
+
+
+    </div>
+</div>
+
+    <div style="height: 50px; display: block"></div>
+
+    <div style="display: flex; justify-content: center;">
+        <button id="return_data" style="margin-top: 20px; padding: 10px; width: 20%; margin-right: 10px; border-radius: 5px;">Create Trip</button>
+
+        <button id="generate_json" style="margin-top: 20px; padding: 10px; width: 20%; margin-left: 10px; border-radius: 5px;">Generate JSON for <br> Manual Configuration</button>
+    </div>
+    
+
+
+     <!-- Return the data function with the button -->
+    
+    <script>
+    document.getElementById('return_data').addEventListener('click', function() {
+        var startDate = new Date(document.getElementById('start_date').value);
+        var startEpoch = Math.floor(startDate.getTime() / 1000);
+    
+        var data = {
+            trip_name: document.getElementById('trip_name').value,
+            device_name: document.getElementById('device-select').value,
+            start_date: startEpoch,
+            mqtt_address: document.getElementById('mqtt_address').value,
+            mqtt_port: document.getElementById('mqtt_port').value,
+            sleep_mode: document.querySelector('input[name="sleep_mode"]:checked').value === 'activate',
+            sleep_interval: document.getElementById('sleep_interval').value,
+            movement_detection_threshold: document.getElementById('movement_detection_threshold').value,
+            bme_mode: document.querySelector('input[name="bme_mode"]:checked').value === 'activate',
+            bme_sampling_interval: document.getElementById('bme_sampling_interval').value,
+            bme_sampling_duration: document.getElementById('bme_sampling_duration').value,
+            gps_mode: document.querySelector('input[name="gps_mode"]:checked').value === 'activate',
+            gps_sampling_interval: document.getElementById('gps_sampling_interval').value,
+            gps_max_time: document.getElementById('gps_max_time').value,
+            accelerometer_scale: document.querySelector('input[name="accelerometer_scale"]:checked').value,
+            data_rate: document.querySelector('input[name="data_rate"]:checked').value,
+            impact_mode: document.querySelector('input[name="impact_mode"]:checked').value === 'activate',
+            impact_threshold: document.getElementById('impact_threshold').value,
+            vibration_mode: document.querySelector('input[name="vibration_mode"]:checked').value === 'activate',
+            vibration_threshold: document.getElementById('vibration_threshold').value,
+            vibration_sampling_interval: document.getElementById('vibration_sampling_interval').value,
+            logs_mode: document.querySelector('input[name="logs_mode"]:checked').value === 'activate',
+            mqtt_mode: document.querySelector('input[name="mqtt_mode"]:checked').value === 'activate',
+            mqtt_interval: document.getElementById('mqtt_interval').value,
+            esp_stats_mode: document.querySelector('input[name="esp_stats_mode"]:checked').value === 'activate',
+            esp_stats_sampling_interval: document.getElementById('esp_stats_sampling_interval').value
+        };
+    
+        console.log(data);
+
+        fetch('/create-trip-request/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                console.log('Success:', data);
+                alert('Trip created successfully! \nTurn on the device for remote configuration. \nRedirecting to the trip selection page.');
+                window.location.href = '/select-trip/';
+            } else {
+                console.error('Error:', data.error);
+                alert('Failed to create trip: ' + data.error);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+    </script>
+
+    <!-- Downloads the data in json format -->
+
+    <script>
+    document.getElementById('generate_json').addEventListener('click', function() {
+        var startDate = new Date(document.getElementById('start_date').value);
+        var startEpoch = Math.floor(startDate.getTime() / 1000);
+    
+        var data = {
+            trip_name: document.getElementById('trip_name').value,
+            device_name: document.getElementById('device-select').value,
+            start_date: startEpoch,
+            mqtt_address: document.getElementById('mqtt_address').value,
+            mqtt_port: document.getElementById('mqtt_port').value,
+            sleep_mode: document.querySelector('input[name="sleep_mode"]:checked').value === 'activate',
+            sleep_interval: document.getElementById('sleep_interval').value,
+            movement_detection_threshold: document.getElementById('movement_detection_threshold').value,
+            bme_mode: document.querySelector('input[name="bme_mode"]:checked').value === 'activate',
+            bme_sampling_interval: document.getElementById('bme_sampling_interval').value,
+            bme_sampling_duration: document.getElementById('bme_sampling_duration').value,
+            gps_mode: document.querySelector('input[name="gps_mode"]:checked').value === 'activate',
+            gps_sampling_interval: document.getElementById('gps_sampling_interval').value,
+            gps_max_time: document.getElementById('gps_max_time').value,
+            accelerometer_scale: document.querySelector('input[name="accelerometer_scale"]:checked').value,
+            data_rate: document.querySelector('input[name="data_rate"]:checked').value,
+            impact_mode: document.querySelector('input[name="impact_mode"]:checked').value === 'activate',
+            impact_threshold: document.getElementById('impact_threshold').value,
+            vibration_mode: document.querySelector('input[name="vibration_mode"]:checked').value === 'activate',
+            vibration_threshold: document.getElementById('vibration_threshold').value,
+            vibration_sampling_interval: document.getElementById('vibration_sampling_interval').value,
+            mqtt_mode: document.querySelector('input[name="mqtt_mode"]:checked').value === 'activate',
+            mqtt_interval: document.getElementById('mqtt_interval').value,
+            logs_mode: document.querySelector('input[name="logs_mode"]:checked').value === 'activate',
+            esp_stats_mode: document.querySelector('input[name="esp_stats_mode"]:checked').value === 'activate',
+            esp_stats_sampling_interval: document.getElementById('esp_stats_sampling_interval').value
+        };
+    
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 4));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "parameters.json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    });
+    </script>
+
+</div>
+</body>
+</html>
+
+
+
+{% endblock %}

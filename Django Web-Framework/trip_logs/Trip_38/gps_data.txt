@@ -1,0 +1,32 @@
+[
+    {
+        "timestamp": 1715103140,
+        "latitude": 40.67265333,
+        "longitude": -8.61053003,
+        "fix": 1,
+        "satellites": 5,
+        "hdop": 3.08,
+        "altitude": 35.5,
+        "geoidalseparation": 51.1
+    },
+    {
+        "timestamp": 1715106449,
+        "latitude": 40.64148998,
+        "longitude": -8.65377502,
+        "fix": 1,
+        "satellites": 4,
+        "hdop": 3.6,
+        "altitude": 33.1,
+        "geoidalseparation": 51.1
+    },
+    {
+        "timestamp": 1715106749,
+        "latitude": 40.62830168,
+        "longitude": -8.70681165,
+        "fix": 1,
+        "satellites": 4,
+        "hdop": 4.29,
+        "altitude": 13.4,
+        "geoidalseparation": 51.1
+    }
+]
