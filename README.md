@@ -11,6 +11,9 @@ This repository contains the implementation of a data logger project designed fo
 - **Django Web-Framework**: Web application framework for interfacing with the data logger.
 - **Tests and Results**: Testing scripts and result logs.
 
+
+![Sensor Diagram](Images/esquema_principal_v3.png)
+
 ## Getting Started
 
 1. **Clone the Repository**:
