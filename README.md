@@ -2,7 +2,7 @@
 # Data Logger Project
 
 ## Overview
-This repository contains the implementation of a data logger project designed for real-time and remote data acquisition during the shipment of Bosch Home Comfort products. The project includes scripts for data processing, device software, and a web interface for data visualization and control.
+This repository contains the implementation of a data logger project designed for real-time and remote data acquisition during the shipment of products. The project includes scripts for data processing, device software, and a web interface for data visualization and control.
 
 ## Repository Structure
 
@@ -10,12 +10,6 @@ This repository contains the implementation of a data logger project designed fo
 - **Device Software (Microcontroller)**: Code for the microcontroller used in the data logging device.
 - **Django Web-Framework**: Web application framework for interfacing with the data logger.
 - **Tests and Results**: Testing scripts and result logs.
-
-## Languages Used
-- HTML: 50.8%
-- Jupyter Notebook: 43.2%
-- Python: 3.0%
-- C++: 3.0%
 
 ## Getting Started
 
