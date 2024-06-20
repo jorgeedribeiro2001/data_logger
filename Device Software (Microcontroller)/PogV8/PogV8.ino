@@ -24,9 +24,8 @@ SPIClass serial_peripheral_interface = SPIClass(VSPI);
 
 
 //////////////////    I2C Configurations    //////////////////////////
-// Define the pins for SDA and SCL for I2C Bus Line
-#define SDA_PIN 21
-#define SCL_PIN 22
+#define SDA_PIN 21  // SDA Pin for I2C Bus Line
+#define SCL_PIN 22  // SCL Pin for I2C Bus Line
 
 #define IMU_ADDRESS 0x69  // I2C address of the IMU
 #define BME_ADDRESS 0x76  //I2C address of the BME
@@ -43,43 +42,50 @@ Adafruit_BME680 bme;  //Uses of the Adrafuit library
 HardwareSerial SerialPortA9G(2);  // use UART2
 HardwareSerial SerialPortGPS(1);
 
+////////////////////// Definitions of Constants //////////////////////
+
+String data_logger_id = "device_2";               //UNIC ID OF THE DEVICE
+String adress_broker_mqtt = "broker.hivemq.com";  // "172.187.90.157";  //MQTT address
+int port_broker_mqtt = 1883;                      //MQTT Port
+String apn = "net2.vodafone.pt";                  // Define the APN of the SIM Network, in this case, vodafone.
+
 ///////// Definitions of Global Variables of the Program /////////////
+bool remote_configuration = true;  // This enables the remote configuration function. If false, the configurations below are used.
 
-String data_logger_id = "device_2";  //UNIC ID OF THE DEVICE
-
-String adress_broker_mqtt = "172.187.90.157";
-int port_broker_mqtt = 1883;
+// This configurations are by default, just to define the variables.
 unsigned long start_timer = 0;
 
-bool sleep_mode = false;
-unsigned long interval_to_sleep_mode = 10 * 60 * 1000;
-float movement_detection_threshold = 0.3;
+bool sleep_mode = false;                                //Enable of the sleep mode function
+unsigned long interval_to_sleep_mode = 10 * 60 * 1000;  // Default 10 minutes without movement (Conversion for miliseconds)
+float movement_detection_threshold = 0.3;               //Default 0.3 g
 
-bool bme_mode = true;
-unsigned long bme_interval_timer =  30 * 1000;
-int interval_bme_recording = 10;  //In Seconds
+bool bme_mode = true;                               //Enable of the bme data recording
+unsigned long bme_interval_timer = 20 * 60 * 1000;  //Default 20 minutes (Conversion for miliseconds)
+int interval_bme_recording = 10;                    //Default 10 seconds (Sample Time Recording)
 
-bool gps_mode = false;
-long gps_interval_timer = 60 * 60 * 1000;
-int max_time_try_location = 60;  //In Seconds
+bool gps_mode = false;                     //Enable of the gps data recording
+long gps_interval_timer = 60 * 60 * 1000;  //Default 60 minutes (Conversion for miliseconds)
+int max_time_try_location = 60;            //In Seconds
 
-int accelerometer_scale = 8;  //2,4,8,16g
+int accelerometer_scale = 8;  //Selection of the accelerometer scale: ONLY 2, 4, 8, 16 g!
 int sample_rate = 200;        //Hz
-bool impact_mode = false;
-float impact_threeshold = 5;  //In G - Impact Threeshold
 
-bool vibration_mode = false;
-int n_vibration_per_sample = 512;             // This should be a power of 2
-float vibration_magnitude_threshold = 0.01;  //G
-long vibration_interval_timer = 2 * 60 * 1000;
+bool impact_mode = false;     //Enable of the impact recording function
+float impact_threeshold = 5;  //Default 5 g - Impact Threeshold
 
-//Definning functions interval timers
-bool mqtt_mode = true;
-long mqtt_interval_timer = 15 * 60 * 1000;
-bool logs_mode = false;
-bool esp_stats_mode = true;
-long esp_stats_interval_timer = 10 * 60 * 1000;
+bool vibration_mode = false;                    //Enable of the vibration recording function
+int n_vibration_per_sample = 512;               // Default 512 points (Not tested other points values)
+float vibration_magnitude_threshold = 0.01;     //Default threshold of vibration recording for each frequency
+long vibration_interval_timer = 2 * 60 * 1000;  //Default interval of 2 minutes for vibration sample recording
 
+bool mqtt_mode = true;                      //Enable of the real time comunication
+long mqtt_interval_timer = 30 * 60 * 1000;  //Default interval of 30 minutes for communication of the data
+
+bool logs_mode = false;                          //Enable the log recording
+bool esp_stats_mode = true;                      //Enable recording of statistics (such as battery voltage)
+long esp_stats_interval_timer = 15 * 60 * 1000;  //Default value of 15 minutes for recording statistics (conversion to miliseconds)
+
+////////////////////////////////////////////////////////////////////////////////////
 
 //Definition of enums
 enum log_message_type {
@@ -241,8 +247,10 @@ void setup() {
   testing_sd();
   LittleFS.end();
 
-  //Configuration of variables of the ESP
-  config_esp();
+  //Remote Configuration of variables of the ESP (Function in FreeRTOS_FUNCTIONS.ino)
+  if (remote_configuration == true) {
+    config_esp();
+  }
 
   //Configuration of the timer of the imu
   hw_timer_t* timer = NULL;         // Pointer to the hardware timer instance
@@ -262,7 +270,7 @@ void setup() {
 void esp_manager_task(void* parameter) {
 
   //Configuration of the Sensors
-  log(INFO, "esp_manager_task", "Starting to Configurating the Sensors");
+  log(INFO, "esp-manager-task", "Starting to Configurating the Sensors");
   imu_config_accelerometer();
   bme_config();
 
@@ -339,11 +347,11 @@ void esp_manager_task(void* parameter) {
         }
 
         //Verifies how much time remaining to start
-        long remaining_time_vibration = millis() - vibration_timer;
-        long remaining_time_bme = millis() - bme_timer;
-        long remaining_time_gps = millis() - gps_timer;
-        long remaining_time_mqtt = millis() - mqtt_timer;
-        long remaining_time_espstats = millis() - esp_stats_timer;
+        long remaining_time_vibration =vibration_timer - millis();
+        long remaining_time_bme = bme_timer - millis();
+        long remaining_time_gps = gps_timer - millis();
+        long remaining_time_mqtt = mqtt_timer - millis();
+        long remaining_time_espstats = esp_stats_timer - millis();
 
 
         //Configuration of the Wake-on-motion interrupt
@@ -408,7 +416,7 @@ void esp_manager_task(void* parameter) {
 
     if (millis() >= bme_timer && bme_mode == true) {
       if (bme_reading_task_handle == NULL) {
-        xTaskCreatePinnedToCore(bme_reading_task, "Read BME Values", 5000, NULL, 6, &bme_reading_task_handle, 0);
+        xTaskCreatePinnedToCore(bme_reading_task, "Read BME Values", 5000, NULL, 10, &bme_reading_task_handle, 1);
       } else if (eTaskGetState(bme_reading_task_handle) == eSuspended) {
         vTaskResume(bme_reading_task_handle);
       } else if (eTaskGetState(bme_reading_task_handle) == eDeleted) {
@@ -515,17 +523,16 @@ void esp_manager_task(void* parameter) {
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-//Function for Core0 Task: Read IMU Values
+//Function: Read IMU Values and Impact Recognisiton Task
 
 /*
-This task monitors accelerometer data in an infinite loop. 
-  It uses a semaphore, the i2cSemaphore to ensure that it is the only task using the I2C bus. 
-  The data is stored in a structure and sent to a queue, the accelerometer_data_queue,
-which follows a FIFO (First In, First Out) policy architecture, for later processing in task0Core1.
+This task monitors accelerometer data in an infinite loop and will detect impacts above a threshold.
+It will take samples for the vibration processing task.
+It uses a semaphore, the i2cSemaphore to ensure that it is the only task using the I2C bus. 
 */
 
 void imu_reading_task(void* parameter) {
-  log(INFO, "imu_reading_task", "Task Started");
+  log(INFO, "imu-reading-task", "Task Started");
 
   float accelX_g = 0;
   float accelY_g = 0;
@@ -558,13 +565,6 @@ void imu_reading_task(void* parameter) {
         xSemaphoreGive(i2cSemaphore);
       }
 
-      /*Serial.print(accelX_g);
-    Serial.print(",");
-    Serial.print(accelY_g);
-    Serial.print(",");
-    Serial.println(accelZ_g);*/
-
-
       // Calculate the magnitude of the acceleration vector
       double magnitude = sqrt(accelX_g * accelX_g + accelY_g * accelY_g + accelZ_g * accelZ_g);
 
@@ -572,7 +572,7 @@ void imu_reading_task(void* parameter) {
       if (magnitude > impact_threeshold && impact_mode == true) {
 
         timestamp = (float)rtc.getEpoch();
-        log(INFO, "imu_reading_task", "Impact Detected!");
+        log(INFO, "imu-reading-task", "Impact Detected!");
 
         //send the previous data
         impact_data.time = timestamp;
@@ -638,9 +638,9 @@ void imu_reading_task(void* parameter) {
         }
 
         int impact_duration = (finish_pos - 1) * (1000 / sample_rate);
-        log(INFO, "imu_reading_task", "Impact above " + String(impact_threeshold) + "G");
-        log(INFO, "imu_reading_task", "Number of Records: " + String(finish_pos));
-        log(INFO, "imu_reading_task", "Impact Duration in ms: " + String(impact_duration) + " ms");
+        log(INFO, "imu-reading-task", "Impact above " + String(impact_threeshold) + "G");
+        log(INFO, "imu-reading-task", "Number of Records: " + String(finish_pos));
+        log(INFO, "imu-reading-task", "Impact Duration in ms: " + String(impact_duration) + " ms");
         xQueueReset(vibration_sample_queue);
       }
 
@@ -666,13 +666,12 @@ void imu_reading_task(void* parameter) {
         }
       }
     }
-    //vTaskDelay(pdMS_TO_TICKS(1000 / sample_rate - 1));
 
     if (order_to_sleep == true) {
       vTaskSuspend(imu_reading_task_handle);
     }
   }
-  log(INFO, "imu_reading_task", "Task Ended");
+  log(INFO, "imu-reading-task", "Task Ended");
   vTaskSuspend(imu_reading_task_handle);
 }
 
@@ -681,6 +680,15 @@ void imu_reading_task(void* parameter) {
 /////////////////////////////////////////////////////////////////////////////////////77
 
 void vibration_processing_task(void* parameter) {
+
+  ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
+  //Function: Process vibration Sample Task
+
+  /*
+This task requests data for a sample from the imu_reading_task for a vibration_sample_queue queue and performs the FFT, 
+and stores the values above a default threshold in the data storage queue.
+*/
 
   accelerometer_data_struct vibration_sample;
   vibration_data_struct vibration_data;
@@ -756,18 +764,19 @@ void vibration_processing_task(void* parameter) {
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-//Function for Core0 Task 1: Read BME Values
+//Function: Read BME Values Task
 
 /*
-This task monitors bme data in an infinite loop. 
-  It uses a semaphore, the i2cSemaphore to ensure that it is the only task using the I2C bus. 
-  The data is stored in a structure and sent to a queue, the bme_data_queue,
-which follows a FIFO (First In, First Out) policy architecture, for later processing in task0Core1.
+This task monitors the bme data. It is called by the esp_manager_task triggered by the bme_timer. 
+It uses a semaphore, the i2cSemaphore, to ensure that it is the only task using the I2C bus. 
+The data is stored in a structure and sent to a queue, the bme_data_queue,
+which follows a First In, First Out (FIFO) architecture, for later storage and transmission.
 */
+
 void bme_reading_task(void* parameter) {
 
   while (1) {
-    log(INFO, "bme_reading_task", "Task Started");
+    log(INFO, "bme-reading-task", "Task Started");
 
     float temperature = 0;
     float humidity = 0;
@@ -790,11 +799,14 @@ void bme_reading_task(void* parameter) {
     //Register Ctrl_hum (0x72)
     //Pag27: osrs_t<2:0> 100 oversampling x8 - humidity
 
-    //if (xSemaphoreTake(i2cSemaphore, portMAX_DELAY)) {
+
+    if (xSemaphoreTake(i2cSemaphore, pdMS_TO_TICKS(10000))) {
       write_I2C(BME_ADDRESS, 0x74, 0b10100100);
       write_I2C(BME_ADDRESS, 0x72, 0b00000100);
-      //xSemaphoreGive(i2cSemaphore);
-    //}
+      xSemaphoreGive(i2cSemaphore);
+    } else {
+      log(FATAL_ERROR, "bme-reading-task", "Timeout for taking the I2C Semaphore.");
+    }
 
     //Waiting to wake up
     vTaskDelay(pdMS_TO_TICKS(100));
@@ -803,11 +815,12 @@ void bme_reading_task(void* parameter) {
 
     while ((millis() - initial_timer) <= (interval_bme_recording * 1000)) {
 
-      //if (xSemaphoreTake(i2cSemaphore, portMAX_DELAY)) {
+      if (xSemaphoreTake(i2cSemaphore, pdMS_TO_TICKS(10000))) {
         BME_Reading(temperature, humidity, pressure);
-        Serial.println(humidity);
-        //xSemaphoreGive(i2cSemaphore);
-      //}
+        xSemaphoreGive(i2cSemaphore);
+      } else {
+        log(FATAL_ERROR, "bme-reading-task", "Timeout for taking the I2C Semaphore.");
+      }
 
       temp_mean += temperature;
       hum_mean += humidity;
@@ -821,16 +834,18 @@ void bme_reading_task(void* parameter) {
     sentData_bme.pressureMean = pressure_mean / contador_values;
 
     if (xQueueSend(bme_data_queue, &sentData_bme, portMAX_DELAY) != pdPASS) {
-      log(ERROR, "bme_reading_task", "Failed to send data to the queue!");
+      log(ERROR, "bme-reading-task", "Failed to send data to the queue!");
     }
 
     //The sensor will sleep
-    //if (xSemaphoreTake(i2cSemaphore, portMAX_DELAY)) {
-    write_I2C(BME_ADDRESS, 0x74, 0b0);
-      //xSemaphoreGive(i2cSemaphore);
-    //}
+    if (xSemaphoreTake(i2cSemaphore, pdMS_TO_TICKS(10000))) {
+      write_I2C(BME_ADDRESS, 0x74, 0b0);
+      xSemaphoreGive(i2cSemaphore);
+    } else {
+      log(FATAL_ERROR, "bme-reading-task", "Timeout for taking the I2C Semaphore.");
+    }
 
-    log(INFO, "bme_reading_task", "Task Ended");
+    log(INFO, "bme-reading-task", "Task Ended");
     vTaskSuspend(bme_reading_task_handle);
   }
   vTaskDelete(NULL);  //Never should get here
@@ -840,10 +855,16 @@ void bme_reading_task(void* parameter) {
 ///////////////////////////////////////////////////////////////////////////
 //Function for Core1 Task 2: GPS Manager
 
+/*
+This task is triggered by the gps_timer from the esp_manager task.
+It will perform the configurations on the A9G to obtain GPS data and wait for a defined timeout for a successful location. 
+If not, the task will terminate and wait for another trigger.
+*/
+
 void gps_manager_task(void* parameter) {
 
   while (1) {
-    log(INFO, "gps_manager_task", "Task Started");
+    log(INFO, "gps-manager-task", "Task Started");
 
     //Local Variables
     gps_data_struct data;
@@ -865,7 +886,7 @@ void gps_manager_task(void* parameter) {
     SerialPortGPS.begin(9600, SERIAL_8N1, 14, 13);
 
     long startTime = millis();
-    log(INFO, "gps_manager_task", "Starting to obtain GPS Signal!");
+    log(INFO, "gps-manager-task", "Starting to obtain GPS Signal!");
 
     while (1) {
       // Check for available data on the GPS serial port
@@ -877,10 +898,10 @@ void gps_manager_task(void* parameter) {
 
         // Check if the GPS fix is valid
         if (data.fix == 1 && data.satellites >= 4 && data.latitude != 0 && data.longitude != 0 && data.HDOP >= 2) {
-          log(INFO, "gps_manager_task", "Location Successed!");
+          log(INFO, "gps-manager-task", "Location Successed!");
           // Attempt to send the GPS data to the queue
           if (xQueueSend(gps_data_queue, &data, portMAX_DELAY) != pdPASS) {
-            log(INFO, "gps_manager_task", "Failed to send GPS data to the queue!");
+            log(INFO, "gps-manager-task", "Failed to send GPS data to the queue!");
           }
 
           // Safely turn off the GPS
@@ -894,13 +915,13 @@ void gps_manager_task(void* parameter) {
 
       // Check if the timeout has been reached
       if (millis() - startTime >= (max_time_try_location * 1000)) {
-        log(INFO, "gps_manager_task", "Location Timeout");
+        log(INFO, "gps-manager-task", "Location Timeout");
         break;  // Exit the loop if the timeout is reached
       }
     }
 
     SerialPortGPS.end();
-    log(INFO, "gps_manager_task", "Task Ended");
+    log(INFO, "gps-manager-task", "Task Ended");
     vTaskSuspend(gps_manager_task_handle);
   }
   vTaskDelete(NULL);  //Should never get here
@@ -909,7 +930,11 @@ void gps_manager_task(void* parameter) {
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-//Task Function sd_communication_task: SD communication Task
+//Function: SD communication Task
+
+/*
+This task receives data from the queues (RAM memory) to the SD card and temporarily (as a buffer for the MQTT transmission) to the internal memory.
+*/
 
 void sd_communication_task(void* parameters) {
 
@@ -948,14 +973,14 @@ void sd_communication_task(void* parameters) {
         if (xQueueReceive(log_data_queue, log_data, 0) == pdTRUE) {
           strcat(log_data, "\n");  //Add a paragraph
           if (!SD.begin(SD_CS_PIN, serial_peripheral_interface, 1000000)) {
-            log(ERROR, "sd_communication_task", "SD card mount failed saving log data.");
+            log(ERROR, "sd-communication-task", "SD card mount failed saving log data.");
             break;
           } else {
             ver1 = append_file_testing(SD, "/log_data.txt", log_data);
             ver2 = append_file_testing(LittleFS, "/log_data_temp.txt", log_data);
             if (ver1 || ver2) {
             } else {
-              log(WARNING, "sd_communication_task", "log data line failed to write.");
+              log(WARNING, "sd-communication-task", "log data line failed to write.");
             }
             SD.end();
           }
@@ -977,7 +1002,7 @@ void sd_communication_task(void* parameters) {
           data += String(bme_data.pressureMean) + "\n";
 
           if (!SD.begin(SD_CS_PIN, serial_peripheral_interface, 1000000)) {
-            log(ERROR, "sd_communication_task", "SD card mount failed saving bme data.");
+            log(ERROR, "sd-communication-task", "SD card mount failed saving bme data.");
             break;
           } else {
             ver1 = append_file(SD, "/bme_data.txt", data);
@@ -986,7 +1011,7 @@ void sd_communication_task(void* parameters) {
             if (ver1 || ver2) {
               data = "";
             } else {
-              log(WARNING, "sd_communication_task", "Bme data line failed to write.");
+              log(WARNING, "sd-communication-task", "Bme data line failed to write.");
             }
 
             SD.end();
@@ -1009,7 +1034,7 @@ void sd_communication_task(void* parameters) {
         }
 
         if (!SD.begin(SD_CS_PIN, serial_peripheral_interface, 1000000)) {
-          log(ERROR, "sd_communication_task", "SD card mount failed saving imu data.");
+          log(ERROR, "sd-communication-task", "SD card mount failed saving imu data.");
           break;
         } else {
           ver1 = append_file(SD, "/impact_data.txt", data);
@@ -1018,7 +1043,7 @@ void sd_communication_task(void* parameters) {
           if (ver1 || ver2) {
             data = "";
           } else {
-            log(WARNING, "sd_communication_task", "Imu data line failed to write.");
+            log(WARNING, "sd-communication-task", "Imu data line failed to write.");
           }
 
           SD.end();
@@ -1040,7 +1065,7 @@ void sd_communication_task(void* parameters) {
         }
 
         if (!SD.begin(SD_CS_PIN, serial_peripheral_interface, 1000000)) {
-          log(ERROR, "sd_communication_task", "SD card mount failed saving vibration data.");
+          log(ERROR, "sd-communication-task", "SD card mount failed saving vibration data.");
           break;
         } else {
           ver1 = append_file(SD, "/vibration_data.txt", data);
@@ -1049,7 +1074,7 @@ void sd_communication_task(void* parameters) {
           if (ver1 || ver2) {
             data = "";
           } else {
-            log(WARNING, "sd_communication_task", "Imu data line failed to write.");
+            log(WARNING, "sd-communication-task", "Imu data line failed to write.");
           }
 
           SD.end();
@@ -1077,7 +1102,7 @@ void sd_communication_task(void* parameters) {
 
 
           if (!SD.begin(SD_CS_PIN, serial_peripheral_interface, 1000000)) {
-            log(ERROR, "sd_communication_task", "SD card mount failed saving gps data.");
+            log(ERROR, "sd-communication-task", "SD card mount failed saving gps data.");
             break;
           } else {
             ver1 = append_file(SD, "/gps_data.txt", data);
@@ -1086,7 +1111,7 @@ void sd_communication_task(void* parameters) {
             if (ver1 || ver2) {
               data = "";
             } else {
-              log(WARNING, "sd_communication_task", "GPS data line failed to write.");
+              log(WARNING, "sd-communication-task", "GPS data line failed to write.");
             }
 
             SD.end();
@@ -1111,7 +1136,7 @@ void sd_communication_task(void* parameters) {
           data += String(esp_stats.n_valueswaiting_gps_data_queue) + "\n";
 
           if (!SD.begin(SD_CS_PIN, serial_peripheral_interface, 1000000)) {
-            log(ERROR, "sd_communication_task", "SD card mount failed saving esp_stats data.");
+            log(ERROR, "sd-communication-task", "SD card mount failed saving esp-stats data.");
             break;
           } else {
             ver1 = append_file(SD, "/esp_stats.txt", data);
@@ -1120,7 +1145,7 @@ void sd_communication_task(void* parameters) {
             if (ver1 || ver2) {
               data = "";
             } else {
-              log(WARNING, "sd_communication_task", "esp_stats data line failed to write.");
+              log(WARNING, "sd-communication-task", "esp-stats data line failed to write.");
             }
             SD.end();
           }
@@ -1132,7 +1157,7 @@ void sd_communication_task(void* parameters) {
       xSemaphoreGive(sd_Semaphore);
       xSemaphoreGive(internal_memory_Semaphore);
     }
-    log(INFO, "sd_communication_task", "Task Ended");
+    log(INFO, "sd-communication-task", "Task Ended");
     vTaskSuspend(sd_communication_task_handle);
   }
   vTaskDelete(NULL);  //Should never get here
@@ -1140,14 +1165,14 @@ void sd_communication_task(void* parameters) {
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-//Task Function mqtt_communication_task: Sending data from the MicroSD Card to MQTT
+//Function mqtt_communication_task: Sending data from the Internal Memory to MQTT
 
 void mqtt_communication_task(void* parameters) {
 
   //The program will never exit this loop
   while (1) {
 
-    log(INFO, "mqtt_communication_task", "Task Started");
+    log(INFO, "mqtt-communication-task", "Task Started");
 
     if (xSemaphoreTake(A9G_usageSemaphore, portMAX_DELAY) && xSemaphoreTake(internal_memory_Semaphore, portMAX_DELAY)) {
 
@@ -1156,7 +1181,7 @@ void mqtt_communication_task(void* parameters) {
         for (int i = 0; i < 3; i++) {
 
           //Waking up the A9G
-          COM_Config("mqtt_communication_task");
+          COM_Config("mqtt-communication-task");
           vTaskDelay(pdMS_TO_TICKS(1000));
 
           //Configurating the Network
@@ -1164,7 +1189,7 @@ void mqtt_communication_task(void* parameters) {
             connection_configurated_sucessfully = true;
             break;
           } else if (i == 3) {
-            log(FATAL_ERROR, "mqtt_communication_task", "A9G cannot configure to the server after 3 times trying");
+            log(FATAL_ERROR, "mqtt-communication-task", "A9G cannot configure to the server after 3 times trying");
             connection_configurated_sucessfully == false;
           }
           vTaskDelay(pdMS_TO_TICKS(2000));
@@ -1178,7 +1203,7 @@ void mqtt_communication_task(void* parameters) {
         //Reading log_data_temp.txt and publish in the "log" topic in mqtt /////////////////////////////////
         if (check_file(LittleFS, "/log_data_temp.txt") == true) {
           if (sd_to_mqtt(LittleFS, "/log_data_temp.txt", "log", 5) == true) {
-            log(INFO, "mqtt_communication_task", "Data sent sucessfully (log_data_temp.txt)");
+            log(INFO, "mqtt-communication-task", "Data sent sucessfully (log-data-temp.txt)");
             delete_file(LittleFS, "/log_data_temp.txt");
           }
           vTaskDelay(pdMS_TO_TICKS(1000));
@@ -1187,7 +1212,7 @@ void mqtt_communication_task(void* parameters) {
         //Reading bme_data_temp.txt and publish in the "bme" topic in mqtt /////////////////////////////////
         if (check_file(LittleFS, "/bme_data_temp.txt") == true) {
           if (sd_to_mqtt(LittleFS, "/bme_data_temp.txt", "bme", 10) == true) {
-            log(INFO, "mqtt_communication_task", "Data sent sucessfully (bme_data_temp.txt)");
+            log(INFO, "mqtt-communication-task", "Data sent sucessfully (bme-data-temp.txt)");
             delete_file(LittleFS, "/bme_data_temp.txt");
           }
           vTaskDelay(pdMS_TO_TICKS(1000));
@@ -1196,7 +1221,7 @@ void mqtt_communication_task(void* parameters) {
         //Reading impact_data_temp.txt and publish in the "imu" topic in mqtt //////////////////////////////
         if (check_file(LittleFS, "/impact_data_temp.txt") == true) {
           if (sd_to_mqtt(LittleFS, "/impact_data_temp.txt", "impacts", 20) == true) {
-            log(INFO, "mqtt_communication_task", "Data sent sucessfully (impact_data_temp.txt)");
+            log(INFO, "mqtt-communication-task", "Data sent sucessfully (impact-data-temp.txt)");
             delete_file(LittleFS, "/impact_data_temp.txt");
           }
           vTaskDelay(pdMS_TO_TICKS(1000));
@@ -1205,7 +1230,7 @@ void mqtt_communication_task(void* parameters) {
         //Reading vibration_data_temp.txt and publish in the "vibration" topic in mqtt /////////////////////////////////
         if (check_file(LittleFS, "/vibration_data_temp.txt") == true) {
           if (sd_to_mqtt(LittleFS, "/vibration_data_temp.txt", "vibration", 20) == true) {
-            log(INFO, "mqtt_communication_task", "Data sent sucessfully (vibration_data_temp.txt)");
+            log(INFO, "mqtt-communication-task", "Data sent sucessfully (vibration-data-temp.txt)");
             delete_file(LittleFS, "/vibration_data_temp.txt");
           }
           vTaskDelay(pdMS_TO_TICKS(1000));
@@ -1214,7 +1239,7 @@ void mqtt_communication_task(void* parameters) {
         //Reading gps_data_temp.txt and publish in the "gps" topic in mqtt /////////////////////////////////
         if (check_file(LittleFS, "/gps_data_temp.txt") == true) {
           if (sd_to_mqtt(LittleFS, "/gps_data_temp.txt", "gps", 10) == true) {
-            log(INFO, "mqtt_communication_task", "Data sent sucessfully (gps_data_temp.txt)");
+            log(INFO, "mqtt-communication-task", "Data sent sucessfully (gps-data-temp.txt)");
             delete_file(LittleFS, "/gps_data_temp.txt");
           }
           vTaskDelay(pdMS_TO_TICKS(1000));
@@ -1223,7 +1248,7 @@ void mqtt_communication_task(void* parameters) {
         //Readingesp_stats_temp.txt and publish in the "esp_stats" topic in mqtt /////////////////////////////////
         if (check_file(LittleFS, "/esp_stats_temp.txt") == true) {
           if (sd_to_mqtt(LittleFS, "/esp_stats_temp.txt", "esp_stats", 10) == true) {
-            log(INFO, "mqtt_communication_task", "Data sent sucessfully (esp_stats_temp.txt)");
+            log(INFO, "mqtt-communication-task", "Data sent sucessfully (esp-stats-temp.txt)");
             delete_file(LittleFS, "/esp_stats_temp.txt");
           }
           vTaskDelay(pdMS_TO_TICKS(1000));
@@ -1232,21 +1257,21 @@ void mqtt_communication_task(void* parameters) {
         //Disconnects from the MQTT Server
         SerialPortA9G.println("AT+MQTTDISCONN");
         if (!check_response_A9G(10000, "OK")) {
-          log(ERROR, "mqtt_communication_task", "Failed to disconnect from MQTT Server");
+          log(ERROR, "mqtt-communication-task", "Failed to disconnect from MQTT Server");
         }
 
         vTaskDelay(pdMS_TO_TICKS(1000));
-        log(INFO, "mqtt_communication_task", "Ending Transmitting Data");
+        log(INFO, "mqtt-communication-task", "Ending Transmitting Data");
       }
     } else {
-      log(FATAL_ERROR, "mqtt_communication_task", "Connection with A9G failed");
+      log(FATAL_ERROR, "mqtt-communication-task", "Connection with A9G failed");
     }
     vTaskDelay(pdMS_TO_TICKS(2000));
     xSemaphoreGive(internal_memory_Semaphore);
     xSemaphoreGive(A9G_usageSemaphore);
 
     connection_configurated_sucessfully = false;
-    log(INFO, "mqtt_communication_task", "Task Ended");
+    log(INFO, "mqtt-communication-task", "Task Ended");
     vTaskSuspend(mqtt_communication_task_handle);
   }
   vTaskDelete(NULL);  //Should never get here
@@ -1255,7 +1280,7 @@ void mqtt_communication_task(void* parameters) {
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-//Function for Core1 Task 3: Debugging and RAM Usage Monitoring
+//Function: Debugging, RAM Usage and Battery Monitoring Task
 
 void esp_stats_task(void* parameter) {
 
@@ -1263,7 +1288,7 @@ void esp_stats_task(void* parameter) {
 
     esp_stats_struct data;
 
-    log(INFO, "esp_stats_task", "Task Started");
+    log(INFO, "esp-stats-task", "Task Started");
 
     data.time = rtc.getEpoch();
 
@@ -1309,13 +1334,13 @@ void esp_stats_task(void* parameter) {
     ////////////////// MONITORING DATA SAVING /////////////////////////////
 
     if (xQueueSend(esp_stats_queue, &data, portMAX_DELAY) != pdPASS) {
-      log(ERROR, "esp_stats_task", "Failed to send espstats data to the queue!");
+      log(ERROR, "esp-stats-task", "Failed to send espstats data to the queue!");
     }
 
     // Delay for 10 second
     vTaskDelay(pdMS_TO_TICKS(10000));
 
-    log(INFO, "esp_stats_task", "Task Ended");
+    log(INFO, "esp-stats-task", "Task Ended");
     vTaskSuspend(esp_stats_task_handle);
   }
   vTaskDelete(NULL);  //Should never get here

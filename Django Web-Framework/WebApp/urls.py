@@ -7,6 +7,7 @@ from .views import LogFiles_Functions
 urlpatterns = [
     path('', auth_views.LoginView.as_view(), name='index'),
     path('devices_manager/', views.devices_manager, name='devices_manager'), 
+    path('add_device/', views.add_device, name='add_device'),
     
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
@@ -32,6 +33,7 @@ urlpatterns = [
     path('update_impact/<int:logger_id>/', views.impact_data.as_view(), name='update_impact'),
     path('update_vibration/<int:logger_id>/', views.vibration_data.as_view(), name='update_vibration'),
     path('update_gps/<int:logger_id>/', views.gps_data.as_view(), name='update_gps'),
+    path('update_battery/<int:logger_id>/', views.battery_level.as_view(), name='update_battery'),
     
     #Send settings to the device
     path('send_config_file/<int:logger_id>/', views.send_configuration, name='send_config_file'),

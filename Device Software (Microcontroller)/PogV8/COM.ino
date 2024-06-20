@@ -94,39 +94,45 @@ bool COM_Config_Network() {
 
   SerialPortA9G.println("AT+CGATT=1");
   if (!check_response_A9G(5000, "OK")) {
-    log(ERROR, "mqtt_communication_task", "Internet Permissions Denied!");
+    log(ERROR, "mqtt-communication-task", "Internet Permissions Denied!");
     return false;
   }
 
-  log(INFO, "mqtt_communication_task", "Internet Permissions OK!");
+  log(INFO, "mqtt-communication-task", "Internet Permissions OK!");
   vTaskDelay(pdMS_TO_TICKS(1000));
 
-  SerialPortA9G.println("AT+CGDCONT=1,\"IP\",\"net2.vodafone.pt\"");
+  SerialPortA9G.println("AT+CGDCONT=1,\"IP\",\"" + apn + "\"");
+  if (!check_response_A9G(5000, "OK")) {
+    log(ERROR, "mqtt-communication-task", "Configuration of the APN Server not succeeded!");
+    return false;
+  }
+
+  /*SerialPortA9G.println("AT+CGDCONT=1,\"IP\",\"net2.vodafone.pt\"");
   if (!check_response_A9G(5000, "OK")) {
     log(ERROR, "mqtt_communication_task", "Configuration of the APN Server not successed!");
     return false;
-  }
+  }*/
 
-  log(INFO, "mqtt_communication_task", "Configuration of the APN Server successed!");
+  log(INFO, "mqtt-communication-task", "Configuration of the APN Server successed!");
   vTaskDelay(pdMS_TO_TICKS(1000));
 
   SerialPortA9G.println("AT+CGACT=1,1");
   if (!check_response_A9G(5000, "OK")) {
-    log(ERROR, "mqtt_communication_task", "Connection to the APN Server not successed!");
+    log(ERROR, "mqtt-communication-task", "Connection to the APN Server not successed!");
     return false;
   }
 
-  log(INFO, "mqtt_communication_task", "Connection to the APN Server successed!");
+  log(INFO, "mqtt-communication-task", "Connection to the APN Server successed!");
   vTaskDelay(pdMS_TO_TICKS(1000));
 
   // Configuration of the MQTT Server
   SerialPortA9G.println("AT+MQTTCONN=\"" + adress_broker_mqtt + "\"," + port_broker_mqtt + ",\"" + data_logger_id + "\",120,0");
   if (!check_response_A9G(10000, "OK")) {
-    log(ERROR, "mqtt_communication_task", "Connection not sucessfully with the MQTT Server!");
+    log(ERROR, "mqtt-communication-task", "Connection not sucessfully with the MQTT Server!");
     return false;
   }
 
-  log(INFO, "mqtt_communication_task", "MQTT Server Connected!");
+  log(INFO, "mqtt-communication-task", "MQTT Server Connected!");
   vTaskDelay(pdMS_TO_TICKS(1000));
 
   return true;
@@ -211,13 +217,13 @@ bool sd_to_mqtt(fs::FS& fs, const char* path, String topic, int n_paragraphs_to_
     while (1) {
       counter++;
       if (!LittleFS.begin()) {
-        log(ERROR, "mqtt_communication_task", "SD card mount failed");
+        log(ERROR, "mqtt-communication-task", "SD card mount failed");
       } else {
         break;
       }
       vTaskDelay(pdMS_TO_TICKS(1000));
       if (counter == 30) {
-        log(FATAL_ERROR, "mqtt_communication_task", "LittleFS mount Failed 30x");
+        log(FATAL_ERROR, "mqtt-communication-task", "LittleFS mount Failed 30x");
         return false;
       }
     }
@@ -230,13 +236,13 @@ bool sd_to_mqtt(fs::FS& fs, const char* path, String topic, int n_paragraphs_to_
       counter++;
       file = fs.open(path, FILE_READ);
       if (!file) {
-        log(ERROR, "mqtt_communication_task", "Failed to open file for reading");
+        log(ERROR, "mqtt-communication-task", "Failed to open file for reading");
         file.close();
       } else {
         break;
       }
       if (counter == 30) {
-        log(FATAL_ERROR, "mqtt_communication_task", "Failed to open file for reading 30x");
+        log(FATAL_ERROR, "mqtt-communication-task", "Failed to open file for reading 30x");
         return false;
       }
       vTaskDelay(pdMS_TO_TICKS(1000));
@@ -265,7 +271,7 @@ bool sd_to_mqtt(fs::FS& fs, const char* path, String topic, int n_paragraphs_to_
       }
 
       if (n_characters_per_paragraph >= max_characters_per_paragraph) {
-        log(ERROR, "mqtt_communication_task", "File Reading Fail, too much characters on the same paragraph");
+        log(ERROR, "mqtt-communication-task", "File Reading Fail, too much characters on the same paragraph");
         segment_processed_successfully = false;
         message = "";
         break;
@@ -300,7 +306,7 @@ bool sd_to_mqtt(fs::FS& fs, const char* path, String topic, int n_paragraphs_to_
         SerialPortA9G.println("AT+MQTTPUB=\"" + topic + "\",\"" + MQTT_sentence + "\",0,0,0");
 
         if (!check_response_A9G(20000, "OK")) {
-          log(ERROR, "mqtt_communication_task", "Failed to send MQTT sentence");
+          log(ERROR, "mqtt-communication-task", "Failed to send MQTT sentence");
         } else if (counter == 3) {
           for (int i = 0; i < 3; i++) {
 
@@ -312,13 +318,13 @@ bool sd_to_mqtt(fs::FS& fs, const char* path, String topic, int n_paragraphs_to_
             if (COM_Config_Network()) {
               break;
             } else if (i == 3) {
-              log(FATAL_ERROR, "mqtt_communication_task", "A9G cannot configure to the server after 3 times trying");
+              log(FATAL_ERROR, "mqtt-communication-task", "A9G cannot configure to the server after 3 times trying");
               return false;
             }
             vTaskDelay(pdMS_TO_TICKS(2000));
           }
         } else if (counter == 5) {
-          log(FATAL_ERROR, "mqtt_communication_task", "Cannot send 5 times the MQTT Setence. Returning false!");
+          log(FATAL_ERROR, "mqtt-communication-task", "Cannot send 5 times the MQTT Setence. Returning false!");
           return false;
         }
 
@@ -446,13 +452,13 @@ bool check_file(fs::FS& fs, const char* path) {
   while (1) {
     counter++;
     if (!LittleFS.begin()) {
-      log(ERROR, "mqtt_communication_task", "SD card mount failed");
+      log(ERROR, "mqtt-communication-task", "SD card mount failed");
     } else {
       break;
     }
     vTaskDelay(pdMS_TO_TICKS(100));
     if (counter == 30) {
-      log(FATAL_ERROR, "mqtt_communication_task", "LittleFS mount Failed 30x");
+      log(FATAL_ERROR, "mqtt-communication-task", "LittleFS mount Failed 30x");
       return false;
     }
   }
@@ -505,22 +511,22 @@ bool delete_file(fs::FS& fs, const char* path) {
   while (1) {
     counter++;
     if (!LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED)) {
-      log(ERROR, "mqtt_communication_task", "SD card mount failed");
+      log(ERROR, "mqtt-communication-task", "SD card mount failed");
     } else {
       break;
     }
     vTaskDelay(pdMS_TO_TICKS(1000));
     if (counter == 30) {
-      log(FATAL_ERROR, "mqtt_communication_task", "SD Card mount Failed 30x");
+      log(FATAL_ERROR, "mqtt-communication-task", "SD Card mount Failed 30x");
       return false;
     }
   }
 
   if (fs.remove(path)) {
-    log(INFO, "mqtt_communication_task", "File Deleted");
+    log(INFO, "mqtt-communication-task", "File Deleted");
     return true;
   } else {
-    log(ERROR, "mqtt_communication_task", "File Not Deleted");
+    log(ERROR, "mqtt-communication-task", "File Not Deleted");
     return false;
   }
 

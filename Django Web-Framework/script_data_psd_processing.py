@@ -20,9 +20,6 @@ sample_rate = int(sys.argv[2])
 vibration_data_path = sys.argv[3]
 print(vibration_data_path)
 
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
-
 # Opening and reading the JSON data from a file
 with open(vibration_data_path, 'r') as file:
     json_data = file.read()

@@ -1,0 +1,295 @@
+<!DOCTYPE html><html><head>
+      <title>README</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\jorge\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.13\crossnote\dependencies\katex\katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="data-logger-project">Data Logger Project </h1>
+<h2 id="overview">Overview </h2>
+<p>This repository contains the implementation of a data logger project designed for real-time and remote data acquisition during the shipment of products. The project includes scripts for data processing, device software, and a web interface for data visualization and control.</p>
+<h2 id="repository-structure">Repository Structure </h2>
+<ul>
+<li><strong>Back-End Scripts</strong>: Scripts for data processing and storage.</li>
+<li><strong>Device Software (Microcontroller)</strong>: Code for the microcontroller used in the data logging device.</li>
+<li><strong>Django Web-Framework</strong>: Web application framework for interfacing with the data logger.</li>
+<li><strong>Tests and Results</strong>: Testing scripts and result logs.</li>
+<li><strong>PCB Project</strong>: KiCad Project of the PCB for the prototype.</li>
+</ul>
+<h2 id="description-of-the-implemented-solution">Description of the Implemented Solution </h2>
+<p>The data logger system uses the ESP32-E Firebeetle 2 microcontroller as the main unit. It works with several sensors to meet the project's requirements:</p>
+<ul>
+<li><strong>Vibration and Impact Monitoring</strong>: Uses the IAM-20680 accelerometer and gyroscope.</li>
+<li><strong>Environmental Monitoring</strong>: Uses the BME680 sensor to measure temperature, humidity, and pressure. Both sensors communicate with the microcontroller using the I2C protocol.</li>
+<li><strong>Data Storage</strong>: Uses a PMod microSD reader module, which communicates via the SPI protocol, for local data storage.</li>
+<li><strong>Mobile Communication and GPS</strong>: Uses the Ai-Thinker A9G module for mobile network communication and GPS tracking, interfacing via the UART protocol.</li>
+</ul>
+<p>Data is sent using the MQTT protocol. Back-end scripts receive this data, convert it to JSON format, and send it to the Django web framework using HTTP Post requests.</p>
+<h5 id="django-web-platform">Django Web Platform </h5>
+<p>The Django framework manages the data and web platform, providing features such as:</p>
+<ul>
+<li><strong>Data Storage</strong>: Uses an SQLite database to store user information, trip details, configurations, and data file paths.</li>
+<li><strong>Interactive Visualization</strong>: Uses JavaScript libraries like Highcharts for graphs and Leaflet for maps to show dynamic data on the trip monitoring page.</li>
+</ul>
+<p><img src="Images/esquema_principal_v3.png" alt="Sensor Diagram"></p>
+<h2 id="data-acquisition">Data Acquisition </h2>
+<p>A prototype was made with a PCB (KiCad Project), as shown in the next picture. This solution has one I2C connector with a Groove connector for the BME680 sensor. Two more I2C connectors are used, each with a TE Connectivity 1744418-4 connector with a 2.5mm pitch. Two SPI connectors have been added. One is for the microSD module, while the other is for the CS pin linked to GPIO 35 (A3) of the ESP32. The latter connector uses the TE Connectivity 1744418-6 with a 2.5mm pitch. This lets you add or try out other sensors. The design also has extra pins for GND, 3V3, and VCC, as well as two ESP32 serial port pins and extra free GPIOs, all marked on the PCB.</p>
+<p><img src="Images/imagem_prototipo_final.jpg" alt="Sensor Diagram"></p>
+<h3 id="microcontroller-program">Microcontroller Program </h3>
+<p>The microcontroller program is developed using the ESP32 microcontroller and various sensors to monitor parameters such as temperature, humidity, pressure, impacts, vibration, and location. The code is structured into tasks that handle sensor readings, data storage, and communication with the web platform via MQTT.</p>
+<h3 id="key-components">Key Components: </h3>
+<ul>
+<li>
+<p><strong>ESP32 Microcontroller</strong>: Handles sensor integration and data processing.</p>
+</li>
+<li>
+<p><strong>Sensors</strong>: Include BME680 for environmental data, IMU for motion data, and the Ai-Thinker A9G for location tracking and communication.</p>
+</li>
+<li>
+<p><strong>SD Card</strong>: Certain SD cards are occasionally unrecognised by the device. To ascertain the functionality of an SD card, connect the device to a computer and open a serial port. During the initialisation process, the system will indicate whether the SD card is recognisable. If the card is recognised, the available memory will be displayed. <em><strong>It is crucial to format the SD card using the FAT32 file system to ensure proper operation.</strong></em> Among the tested SD cards, the Kingston CANVAS Select Plus models with capacities of 32GB and 64GB (class 10) have proven to be reliable.</p>
+</li>
+<li>
+<p><strong>SIM Card</strong>: The device is configured to utilise a SIM plan card for communication via a 2G network to access the internet. The SIM operator employed in this instance is Vodafone Portugal, with the Access Point Name (APN) specified as <code>net2.vodafone.pt</code>.</p>
+<p><em><strong>It is crucial to note that if a different SIM operator is used, it is necessary to modify the APN configuration within the hardware programme to match the new operator's APN. Furthermore, it is imperative to disable the PIN on the SIM card, as the device lacks the capability to handle PIN entry.</strong></em> This functionality must be implemented to avoid potential security vulnerabilities.</p>
+</li>
+</ul>
+<h3 id="running-the-microcontroller-program">Running the Microcontroller Program: </h3>
+<ol>
+<li>
+<p><strong>Set Up the Development Environment</strong>:</p>
+<ul>
+<li>Install the necessary tools and libraries for ESP32 development.</li>
+<li>Use the Arduino IDE or PlatformIO for code uploading.</li>
+</ul>
+</li>
+<li>
+<p><strong>Upload the Code</strong>:</p>
+<ul>
+<li>Connect the ESP32 to your computer.</li>
+<li>Compile and upload the code from the <code>microcontroller</code> directory.</li>
+</ul>
+</li>
+</ol>
+<p>For initial configurations, the device is pre-configured with specific settings, such as a unique identifier, the initial MQTT address and port, and the APN for network connectivity. This can be encounter on the PogV8.ino file.</p>
+<p><img src="Images/apn_and_mqttconfig.png" alt="hardware_configs"></p>
+<p>If you do not wish to use the remote configuration feature, you can manually define each configuration below in the <code>Definitions of Global Variables of the Program</code> section. To do this, you will need to set the <code>remote_configuration</code> variable to <code>false</code>.</p>
+<p><img src="Images/global_variables.png" alt="hardware_configs2"></p>
+<p>In the case of remote configuration, if a configuration file is present, the system variables are set according to the specifications outlined in the JSON document created in the "Create Trip" webpage. If the internal memory does not contain a configuration file, the A9G module is activated and configured. This module subscribes to the "config" topic on the MQTT broker and awaits the receipt of the JSON file for up to 60 seconds. During this interval, the embedded LED on the microcontroller is programmed to blink at 500 ms intervals. The user must access the Devices Manager webpage and then press the button "Send Configuration."<br>
+Upon receipt of a file, the device proceeds to process it and verify whether the JSON file’s device ID matches the ID coded into the device. Each device ID is unique. If the IDs match, the device sets all global variables and copies the JSON file to the internal memory. Once the configuration is complete, the LED remains illuminated for three seconds before turning off. This signifies the setup process is finished and the system is ready for operation.</p>
+<p><img src="Images/initialisation_esp.png" alt="remote_config"></p>
+<p>The end mode, represented in Figure 4.13, is initiated when the user presses the embedded button on the microcontroller for a period of three seconds, thereby initiating the procedure and activating the embedded LED.</p>
+<p><img src="Images/end_mode.png" alt="end_mode"></p>
+<h2 id="data-processing-and-visualization">Data Processing and Visualization </h2>
+<p>The data processing and visualization for the data logger system is managed through a series of scripts and a Django-based web platform. The system architecture and the functions of each script are described below.</p>
+<h3 id="system-architecture">System Architecture </h3>
+<ol>
+<li>
+<p><strong>Data Acquisition</strong>:</p>
+<ul>
+<li>The data logger devices collect data on temperature, humidity, pressure, impacts, vibration, and location.</li>
+<li>This data is transmitted to the MQTT Broker (Mosquitto) using the MQTT protocol.</li>
+</ul>
+</li>
+<li>
+<p><strong>Data Processing</strong>:</p>
+<ul>
+<li><strong>Script Data Receiver</strong>: Subscribes to the MQTT topics to receive data from the data loggers.</li>
+<li><strong>Script Data Processing</strong>: Processes the raw data, converts it into JSON format, and prepares it for storage and visualization.</li>
+<li><strong>Script Remote Configuration</strong>: Publishes configuration settings to the data loggers.</li>
+</ul>
+</li>
+<li>
+<p><strong>Data Storage and Management</strong>:</p>
+<ul>
+<li>The processed data is stored in an SQLite database, which keeps information about users, trips, trip configurations, and data file paths.</li>
+<li>Additional processing by <strong>Script Data PSD Processing</strong> converts the raw data for FFT segments into Power Spectral Density (PSD) format for further analysis in the web platform.</li>
+</ul>
+</li>
+<li>
+<p><strong>Web Framework (Django)</strong>:</p>
+<ul>
+<li><strong><a href="http://Views.py">Views.py</a></strong>: Handles HTTP requests and returns responses to the client. It interacts with the models and templates to fetch and display data.</li>
+<li><strong><a href="http://Models.py">Models.py</a></strong>: Defines the database schema and interacts with the SQLite database to retrieve and store data.</li>
+<li><strong><a href="http://Urls.py">Urls.py</a></strong>: Maps URLs to the corresponding views, enabling navigation within the web application.</li>
+<li><strong>Templates</strong>: HTML files that render the data into user-friendly web pages.</li>
+</ul>
+</li>
+<li>
+<p><strong>Visualization</strong>:</p>
+<ul>
+<li>The web platform uses JavaScript libraries such as Highcharts and Leaflet for interactive data visualization.</li>
+<li><strong>Highcharts</strong>: Generates interactive graphs to display real-time and historical data on environmental conditions and impacts.</li>
+<li><strong>Leaflet</strong>: Provides map visualizations with recorded GPS points for tracking the location of shipments.</li>
+</ul>
+</li>
+</ol>
+<h3 id="process-flow">Process Flow </h3>
+<ul>
+<li>Data is continuously collected by the data loggers and transmitted via MQTT.</li>
+<li>The <strong>Script Data Receiver</strong> listens for incoming data and passes it to the <strong>Script Data Processing</strong>.</li>
+<li>Processed data is stored in the SQLite database and can be accessed through the Django web platform.</li>
+<li>Users can interact with the platform to configure devices, monitor ongoing trips, and visualize data through dynamic graphs and maps.</li>
+</ul>
+<p><img src="Images/scheme_data_processing_visualization.png" alt="Platform Diagram"></p>
+<h3 id="running-the-server">Running the Server </h3>
+<p>When setting up the server, three key considerations must be addressed:</p>
+<ul>
+<li>
+<p><strong>MQTT Server Configuration</strong>: Although it is possible to use an external MQTT server, such as <a href="http://broker.hivemq.com">broker.hivemq.com</a> or <a href="http://broker.emqx.io">broker.emqx.io</a>, it is advisable to install and configure Eclipse Mosquitto on the server to ensure greater system reliability. <em><strong>Additionally, Port 1883 should be opened for public access</strong></em>.</p>
+</li>
+<li>
+<p><strong>Script Data Receiver</strong>: Ensure that the Script Data Receiver (Python Script) is running continuously. This script is designed to operate without interruption and includes error-handling mechanisms to facilitate automatic rebooting. <em><strong>It is important to configure the MQTT address and port at the beginning of the program.</strong></em></p>
+</li>
+<li>
+<p><strong>Django Web Framework Configuration</strong>: Properly configure the Django web framework. Detailed instructions for configuring Django will be provided in the subsequent section.</p>
+</li>
+</ul>
+<h4 id="running-the-django-web-framework">Running the Django Web-Framework </h4>
+<ol>
+<li>
+<p><strong>Clone the Repository</strong>:</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token function">git</span> clone https://github.com/jorgeedribeiro2001/data_logger_project.git
+<span class="token builtin class-name">cd</span> data_logger_project
+</code></pre></li>
+<li>
+<p><strong>Install Dependencies</strong>:</p>
+<ul>
+<li>For Python components, use the requirements file:<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>pip <span class="token function">install</span> <span class="token parameter variable">-r</span> requirements.txt
+</code></pre></li>
+</ul>
+</li>
+<li>
+<p><strong>Run the Django Application</strong>:</p>
+<ul>
+<li>Navigate to the Django project directory:<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token builtin class-name">cd</span> django_project
+</code></pre></li>
+<li>Apply migrations:<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>python manage.py migrate
+</code></pre></li>
+<li>Create a superuser to access the admin interface:<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>python manage.py createsuperuser
+</code></pre></li>
+<li>Start the development server:<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>python manage.py runserver
+</code></pre></li>
+<li>Access the application at <code>http://127.0.0.1:8000/</code>.</li>
+</ul>
+</li>
+</ol>
+<p>For running for the internet make sure that you have an Public IP and a port available to public. For running on the port you can:</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>python manage.py runserver <span class="token number">0.0</span>.0.0:8000
+</code></pre><p>It is notable that the platform was not developed for public porposes and not went with any security concerns.</p>
+<p>To run the Django application over the internet, ensure you have a public IP address and an available port. Follow these steps to run the application:</p>
+<ol>
+<li>
+<p><strong>Open the Server to External Access</strong>:<br>
+Run the Django development server with the following command to make it accessible over the internet:</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>python manage.py runserver <span class="token number">0.0</span>.0.0:8000
+</code></pre></li>
+<li>
+<p><strong>Public IP and Port</strong>:</p>
+<ul>
+<li>Ensure your server's firewall allows traffic on the specified port (e.g., 8000).</li>
+<li>Configure your router to forward incoming traffic on this port to your server if running behind a NAT.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations</strong>:</p>
+<ul>
+<li>This platform was developed for demonstration purposes and internal use only.</li>
+<li>It lacks security features necessary for a public-facing application.</li>
+<li>If you intend to make this application accessible over the internet, implement proper security measures such as HTTPS, firewalls, authentication, and regular security audits.</li>
+</ul>
+</li>
+<li>
+<p><strong>Deployment Recommendations</strong>:</p>
+<ul>
+<li>For production deployment, use a robust web server like Nginx or Apache as a reverse proxy.</li>
+<li>Consider using a WSGI server like Gunicorn or uWSGI to serve the Django application.</li>
+<li>Set up SSL/TLS certificates for secure HTTPS connections.</li>
+</ul>
+</li>
+</ol>
+<h3 id="graphical-interface">Graphical Interface </h3>
+<p>The graphical interface of the data logger system includes several user-accessible pages designed as adaptable templates. These templates ensure that the HTML pages dynamically respond to user requests. For instance, when a user monitors a trip, the page's structure and elements adjust automatically to display the specific trip data selected by the user. Below is a visual representation of the hierarchical structure of these pages:</p>
+<p><img src="Images/graphical_sheme_display.png" alt="Web Pages Interaction Diagram"><br>
+<em>Figure: Web Pages Interaction Diagram</em></p>
+<h4 id="page-descriptions">Page Descriptions </h4>
+<h5 id="user-login-page">User Login Page </h5>
+<p>The user login page is the primary access point for users. It features a straightforward interface where users can enter their credentials. Upon successful login, users are redirected to the appropriate dashboard. Administrators can also access the administrative platform from this page.</p>
+<p><img src="Images/login_page1.png" alt="User Login Layout"><br>
+<em>Figure: User Login Layout</em></p>
+<h5 id="administrator-platform">Administrator Platform </h5>
+<p>This platform is accessible only to administrators. It provides comprehensive data access and user management capabilities, allowing administrators to manage users, modify values in the SQLite database, and oversee data collected by the devices.</p>
+<p><img src="Images/admin_platform_layout.png" alt="Administrator Platform Layout"><br>
+<em>Figure: Administrator Platform Layout</em></p>
+<h5 id="device-manager-page">Device Manager Page </h5>
+<p>Upon logging in, users are redirected to the Device Manager page. This page can also be accessed via the menu bar. It requires user authentication and displays the devices added by the user. Administrators can view all devices. Users can see device status, end trips, configure devices remotely, and view logs.</p>
+<p><img src="Images/device_manager_page.png" alt="Device Manager Page Layout"><br>
+<em>Figure: Device Manager Page Layout</em></p>
+<h5 id="create-trip-page">Create Trip Page </h5>
+<p>This page allows users to create a new trip and configure the associated device settings. Users can navigate to this page via the menu bar or through a specific link. They can define the trip name, select an available data logger, and set the start date. Configuration parameters can be set, and a JSON file can be generated for saving on the user's computer.</p>
+<p><img src="Images/create_trip_page.png" alt="Create Trip Page Layout"><br>
+<em>Figure: Create Trip Page Layout</em></p>
+<h5 id="select-trip-page">Select Trip Page </h5>
+<p>The Select Trip page allows users to view and select from a list of their trips. Users can delete a trip or proceed to monitor it. This page is accessible via the menu bar and requires user authentication.</p>
+<p><img src="Images/selecting_trip_page.png" alt="Select Trip Page Layout"><br>
+<em>Figure: Select Trip Page Layout</em></p>
+<h5 id="monitoring-trip-page">Monitoring Trip Page </h5>
+<p>This page is crucial for data analysis and visualization. It is divided into sections for general trip details, BME data (temperature, humidity, pressure), IMU data (impact, vibration), and location data. Each section provides detailed analysis and interactive graphs.</p>
+<p><img src="Images/tripdetails_bme_data_page.png" alt="Monitoring Page: Trip Details and BME Data Sections Layout"><br>
+<em>Figure: Monitoring Page: Trip Details and BME Data Sections Layout</em></p>
+<p><img src="Images/imu_data_page.png" alt="Monitoring Page: IMU Data Section Layout"><br>
+<em>Figure: Monitoring Page: IMU Data Section Layout</em></p>
+<p><img src="Images/location_data_page.png" alt="Monitoring Page: Location Section Layout"><br>
+<em>Figure: Monitoring Page: Location Section Layout</em></p>
+<h4 id="javascript-libraries">JavaScript Libraries </h4>
+<p>The interactive graphs and maps are created using the Highcharts and Leaflet JavaScript libraries. Highcharts is used for generating interactive graphs, while Leaflet is used for creating interactive maps with recorded position points. These tools provide dynamic visualization of the data collected by the data logger devices.</p>
+<p>This graphical interface ensures a user-friendly and efficient way to manage devices, create and monitor trips, and visualize data for analysis, making it a vital part of the data logger system.</p>
+<h2 id="troubleshooting">Troubleshooting </h2>
+<h5 id="when-i-turn-on-the-device-the-light-is-always-on-indefinitely">When I turn on the device, the light is always on indefinitely. </h5>
+<p>This issue may arise due to initialization errors, often related to inaccessible sensors or the communication module's inability to connect to the network for remote configuration or microSD incompatibility. To troubleshoot, follow these steps:</p>
+<ul>
+<li>Verify that all sensor connections are secure.</li>
+<li>Ensure a compatible microSD card is in place.</li>
+<li>Confirm that the SIM card is functioning correctly.</li>
+<li>Check that the MQTT settings are properly configured.</li>
+</ul>
+<p>To determine the specific cause, connect the device to a computer, open a serial port, and restart the device. This will display initialization information on the serial port. The baud rate should be set to 115200 bps.</p>
+<h5 id="the-remote-configuration-does-not-work-the-light-keeps-blinking-after-i-click-the-send-configuration-button-on-the-web-platform">The remote configuration does not work (the light keeps blinking after I click the Send Configuration button on the web platform). </h5>
+<p>This issue may be attributed to improper configuration of the MQTT server settings. Ensure that the device is configured with the correct MQTT broker address and port. Additionally, verify that the appropriate settings have been entered on the Create Trip webpage.</p>
+<h5 id="despite-the-device-being-deployed-in-the-field-the-web-platform-is-not-receiving-or-displaying-updated-data">Despite the device being deployed in the field, the web platform is not receiving or displaying updated data. </h5>
+<p>Verify if the script data receiver is running with the correct MQTT configurations. Additionally, check if the issue is isolated to a single device or affects multiple devices. Examine the last communication timestamp of the device and ensure that the trip configurations have the communication interval set correctly. If all these aspects are in order, contact the repository owner for further assistance. Remember that the device communication might be skipped during the programmed interval but will resume in the subsequent interval.</p>
+<h2 id="license">License </h2>
+<p>This project is licensed under the GNU General Public License v3.0.</p>
+<h2 id="contact">Contact </h2>
+<p>For any queries, contact the repository owner on LinkedIn page: <a href="https://www.linkedin.com/in/jorgeedribeiro/">https://www.linkedin.com/in/jorgeedribeiro/</a></p>
+<hr>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

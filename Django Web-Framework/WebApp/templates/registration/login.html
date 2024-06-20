@@ -14,9 +14,9 @@ Login
     <style>
         .boxx {
             margin: 0 auto;
-            width: 30%;
+            width: 50%;
             padding: 10px;
-            border-radius: 1px;
+            border-radius: 10px;
             align-items: center;
             border-color: hsl(240, 55%, 10%);
             border: 2px solid hsl(240, 55%, 10%);
@@ -26,12 +26,13 @@ Login
     </style>
 </head>
 <body>
-    <div class="boxx">
+    <div class="boxx" style="position: relative; padding: 10px;">
     <h2>Login</h2>
     <form method="post" action="{% url 'login' %}">  {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Login</button>
+        <button style="padding: 10px; background-color: #F5F5F5; color: black; border: 1px solid black; cursor: pointer; border-radius: 4px; margin-left: 20px;" type="submit">Login</button>
     </form>
+    <button style="padding: 10px; background-color: #F5F5F5; color: black; border: 1px solid black; cursor: pointer; border-radius: 4px; position: absolute; bottom: 10px; right: 10px;" onclick="window.location.href='{% url 'admin:index' %}'">Administrator Platform</button>
     </div>
 </body>
 </html>

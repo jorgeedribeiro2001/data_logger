@@ -26,7 +26,7 @@ void BME_Reading(float &temperature, float &humidity, float &pressure) {
     pressure = bme.pressure;
 
   } else {
-    log(ERROR, "bme_reading_task", "Failed obtaining data from BME");
+    log(ERROR, "bme-reading-task", "Failed obtaining data from BME");
   }
   Wire.endTransmission();
 }

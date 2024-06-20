@@ -22,6 +22,7 @@ import pandas as pd
 import subprocess
 from django.core.files import File
 from io import BytesIO
+from django.contrib import messages
 
 ###############################################################################
 # Functions for managing the users
@@ -43,14 +44,49 @@ def logout_view(request):
     LOGOUT(request)
     return redirect('index')
 
-
 ###############################################################################
 # Functions for managing the devices
 
 @login_required(login_url='/login')
 def devices_manager(request):
-    loggers = Logger.objects.all()
+    loggers = Logger.objects.filter(user_associated=request.user)
     return render(request, 'devices_manager.html', {'loggers': loggers})
+
+@csrf_exempt
+def add_device(request):
+    if request.method == 'POST':
+        device_name = request.POST.get('name') # Get the name of the device from the POST request
+        device_id = request.POST.get('device_id') # Get the id of the device from the POST request
+        
+
+        current_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+        device_log_path = os.path.join(current_dir, f"devices_logs/device_{device_id}")  # Get the log path of the device from the POST request
+
+        os.makedirs(device_log_path, exist_ok=True)  # Create the directory if it does not exist
+
+        full_path = os.path.join(device_log_path, 'log.txt')
+
+        with open(full_path, 'wb') as f:
+            file = File(f)
+        
+        
+        # Create a new Logger instance
+        logger = Logger.objects.create(
+            user_associated=request.user,
+            id=device_id,
+            name=device_name,
+            device_log_path=device_log_path,
+            last_communication_timestamp=None,
+            last_gps_timestamp=None,
+            last_gps_location_latitude=None,
+            last_gps_location_longitude=None,
+            battery_level=None,
+            current_trip=None,
+        )
+        
+        messages.success(request, 'Device added successfully!')
+        return redirect('devices_manager')
+    return render(request, 'add_device.html')
 
 @csrf_exempt
 def send_configuration(request, logger_id):
@@ -66,6 +102,9 @@ def send_configuration(request, logger_id):
     trip = logger.current_trip
     if trip is None:
         return JsonResponse({'status': 'failure', 'error': 'No ongoing trip found for this logger'}, status=404)
+    
+    #Get the start date of the trip
+    start_date = trip.start_date.timestamp() if trip.start_date is not None else None
 
     # Get the TripConfig for the trip
     try:
@@ -77,6 +116,7 @@ def send_configuration(request, logger_id):
         'device_id': f"device_{logger.id}",
         'mqtt_address': tripconfig.mqtt_address,
         'mqtt_port': tripconfig.mqtt_port,
+        #'start_date': start_date,
         'sleep_mode': tripconfig.sleep_mode,
         'sleep_interval': tripconfig.sleep_interval,
         'movement_detection_threshold': tripconfig.movement_detection_threshold,
@@ -781,5 +821,30 @@ class LogFiles_Functions(View):
                 return JsonResponse({'status': 'success'})
             except FileNotFoundError:
                 return HttpResponse('File not found', status=404)
+        else:
+            return JsonResponse({'status': 'failure', 'error': 'No data provided'}, status=400)
+        
+#Define the view for updating the battery level
+@method_decorator(csrf_exempt, name='dispatch')
+class battery_level(View):
+    def post(self, request, *args, **kwargs):
+        logger_id = kwargs['logger_id']
+        
+        # Get the logger and verifies if exist
+        try:
+            logger = Logger.objects.get(id=logger_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 'failure', 'error': 'Logger not found'}, status=404)
+        
+        # Parse the JSON body of the request
+        body_unicode = request.body.decode('utf-8')
+        body_data = json.loads(body_unicode)
+        battery_level = body_data.get('data')
+        new_battery_level = float(battery_level[-1])
+        
+        if new_battery_level:
+            logger.battery_level = int((new_battery_level-3.2)/(4.2-3.2)*100) #Convert the battery level to percentage
+            logger.save()
+            return JsonResponse({'status': 'success'})
         else:
             return JsonResponse({'status': 'failure', 'error': 'No data provided'}, status=400)
