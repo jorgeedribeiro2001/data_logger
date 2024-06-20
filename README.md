@@ -162,16 +162,9 @@ When setting up the server, three key considerations must be addressed:
      ```
    - Access the application at `http://127.0.0.1:8000/`.
   
-For running for the internet make sure that you have an Public IP and a port available to public. For running on the port you can:
 
-```bash
-python manage.py runserver 0.0.0.0:8000
-```
-It is notable that the platform was not developed for public porposes and not went with any security concerns.
-
-
-
-To run the Django application over the internet, ensure you have a public IP address and an available port. Follow these steps to run the application:
+To run the Django application over the internet, ensure you have a public IP address and an available port.
+It is notable that the platform was not developed for public porposes and not went with any security concerns. Follow these steps to run the application:
 
 1. **Open the Server to External Access**:
    Run the Django development server with the following command to make it accessible over the internet:
