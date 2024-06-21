@@ -1,0 +1,14 @@
+Modelo do Forno - 
+
+1712135723 - começou a crescer a temperatura de 28 para 30
+1712135723 - AMPROBE TR300 marca outside 25.1ºC e 42.2% humidade relativa
+1712136096 - Forno marca 30ºC - começa os 20 min 
+1712137335 - Fim dos 20 min - subir ate 40ºC
+1712137480 - Forno marca 35ºC
+1712137624 - Forno marca 40ºC - Iniciar 20 minutos
+1712138951 - Fim dos 20 min - subir até 50ºC
+1712139143 - Forno marca 45ºC
+1712139285 - Forno marca 50ºC - Iniciar 40 minutos
+1712141792 - Fim dos 40 min - desligar forno e meter ca fora os data loggers
+1712142151 - TR300 AMPPROBE marca 26.1ºC 38.9%
+1712148797 - TR300 AMPPROBE marca 25.0ºC 43.7% 

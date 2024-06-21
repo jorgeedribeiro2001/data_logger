@@ -7,7 +7,7 @@ import sys
 
 
 # Set up MQTT client
-broker = '172.187.90.157'
+broker = 'broker.emqx.io'
 port = 1883
 client_id = 'main_client'
 

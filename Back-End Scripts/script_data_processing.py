@@ -279,7 +279,29 @@ if len(data) > 0:
         print("Error sending Log data")
 else:
     print("No Log data to send")
+
+
+
+# Send ESP Stats data (This will only send the battery voltage for now)
+data = read_file(data_logger_name, 'esp_stats.txt')
+line = data.split('\n')
+battery_level = []
+for i in range(len(line)):
+    line[i] = line[i].split(',')
+    if len(line[i]) > 2:
+        battery_level.append(line[i][2])
     
+if len(battery_level) > 0:
+    if (post_request(data_logger_name, "battery", battery_level)):
+        print("ESP Stats data sent successfully")
+        try:
+            os.remove(os.path.join(temp_path, data_logger_name, 'esp_stats.txt'))
+        except Exception as e:
+            print(f"Error removing file: {e}")
+    else:
+        print("Error sending ESP Stats data")
+else:
+    print("No ESP Stats data to send")
     
     
 print("Device data processing completed\n\n")
